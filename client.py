@@ -7,6 +7,7 @@ __author__ = "Sch8ill"
 import socket
 import struct
 import json
+import time
 
 
 class VarInt:
@@ -37,7 +38,7 @@ class VarInt:
         return data
     
 
-class ClientPacket:
+class Packet:
     def __init__(self, id, fields=[]):
         self.id = id
         self.fields = fields
@@ -64,8 +65,10 @@ class ClientPacket:
             data = self.varint.pack(len(data)) + data
 
         elif type(data) == float:
-            data = struct.pack('L', int(data))
-            
+            print(data)
+            data = struct.pack('Q', int(data))
+            print(data)
+
         return data
 
 
@@ -117,22 +120,25 @@ class Client:
             next_state
         ]
 
-        packet = ClientPacket(b"\x00", fields)
+        packet = Packet(b"\x00", fields)
         packet = packet.pack()
-        self._send(packet) 
+        self._send(packet)
+
 
 
     def get_status(self):
         self._connect()
         self._handshake()
 
-        packet = ClientPacket(b"\x00")
+        packet = Packet(b"\x00")
         packet = packet.pack()
         self._send(packet)
-
         res = self._recv(extra_varint=True)
+
         res = res.decode("utf-8")
         res = json.loads(res)
+
+        self.sock.close()
 
         return res
 

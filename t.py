@@ -4,8 +4,8 @@
 
 import socket
 import struct
+import time
 
 
 
-print(struct.pack("B", 0))
-print(b"\x00")
+print(time.time() / 1000)
