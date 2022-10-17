@@ -107,6 +107,7 @@ class Client:
 
         else:
             data = self.sock.recv(length)
+
         return data
 
 
@@ -134,6 +135,8 @@ class Client:
         res = self._recv(extra_varint=True)
         res = res.decode("utf-8")
         res = json.loads(res)
+
+        return res
 
 
 
