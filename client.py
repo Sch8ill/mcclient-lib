@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Sch8ill"
 
 
@@ -10,22 +10,22 @@ import json
 
 
 class VarInt:
-    def pack(self, data):
+    @staticmethod
+    def pack(data):
         ordinal = b''
 
         while data != 0:
             byte = data & 0x7F
             data >>= 7
             ordinal += struct.pack('B', byte | (0x80 if data > 0 else 0))
-
         return ordinal
 
 
-    def unpack(self, sock):
+    @staticmethod
+    def unpack(sock):
         data = 0
         for i in range(5):
             ordinal = sock.recv(1)
-
             if len(ordinal) == 0:
                 break
 
@@ -34,7 +34,6 @@ class VarInt:
 
             if not byte & 0x80:
                 break
-
         return data
     
 
@@ -45,7 +44,7 @@ class ClientPacket:
         self.varint = VarInt()
 
 
-    def compile(self):
+    def pack(self):
         packet = self._encode(self.id)
 
         for field in self.fields:
@@ -66,8 +65,7 @@ class ClientPacket:
 
         elif type(data) == float:
             data = struct.pack('L', int(data))
-
-        print("packed: " + str(data))
+            
         return data
 
 
@@ -120,7 +118,7 @@ class Client:
         ]
 
         packet = ClientPacket(b"\x00", fields)
-        packet = packet.compile()
+        packet = packet.pack()
         self._send(packet) 
 
 
@@ -129,7 +127,7 @@ class Client:
         self._handshake()
 
         packet = ClientPacket(b"\x00")
-        packet = packet.compile()
+        packet = packet.pack()
         self._send(packet)
 
         res = self._recv(extra_varint=True)
