@@ -85,6 +85,7 @@ class StatusClient:
 
 
 if __name__ == "__main__":
-    client = StatusClient("gommehd.net")
+    #client = StatusClient("gommehd.net")
+    client = StatusClient()
     res = client.get_status()
     print(res)
