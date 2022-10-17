@@ -137,11 +137,6 @@ class Client:
 
 
 
-
-
-
-
-
 if __name__ == "__main__":
     client = Client()
     res = client.get_status()
