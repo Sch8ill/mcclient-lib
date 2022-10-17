@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "Sch8ill"
 
 
 import socket
 import struct
 import json
-import time
+
 
 
 class VarInt:
@@ -32,11 +32,11 @@ class VarInt:
 
             byte = ord(ordinal)
             data |= (byte & 0x7F) << 7*i
-
             if not byte & 0x80:
                 break
         return data
     
+
 
 class Packet:
     def __init__(self, id, fields=[]):
@@ -58,7 +58,7 @@ class Packet:
 
     def _encode(self, data):
         if type(data) == int:
-            data = struct.pack('H', data)
+            data = struct.pack("H", data)
 
         elif type(data) == str:
             data = data.encode("utf-8")
@@ -66,7 +66,7 @@ class Packet:
 
         elif type(data) == float:
             print(data)
-            data = struct.pack('Q', int(data))
+            data = struct.pack(">Q", int(data))
             print(data)
 
         return data
@@ -79,7 +79,7 @@ class Client:
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.settimeout(timeout)
-        self.proto_version = b"\x00"
+        self.protocoll_version = b"\x00"
         self.varint = VarInt()
 
 
@@ -87,8 +87,10 @@ class Client:
         self.sock.connect((self.host, self.port))
 
 
-    def _send(self, packet):
-        print("send: " + str(packet))
+    def _send(self, packet, verbose=False):
+        if verbose:
+            print("send: " + str(packet))
+
         return self.sock.send(packet)
 
 
@@ -114,7 +116,7 @@ class Client:
 
     def _handshake(self, next_state=b"\x01"):
         fields = [
-            self.proto_version,
+            self.protocoll_version,
             self.host,
             25565,
             next_state
@@ -123,7 +125,6 @@ class Client:
         packet = Packet(b"\x00", fields)
         packet = packet.pack()
         self._send(packet)
-
 
 
     def get_status(self):
@@ -146,7 +147,6 @@ class Client:
 
 
 if __name__ == "__main__":
-    client = Client()
+    client = Client("gommehd.net")
     res = client.get_status()
-
     print(res)
