@@ -5,75 +5,13 @@ __author__ = "Sch8ill"
 
 
 import socket
-import struct
 import json
+from packet import Packet
+from varint import VarInt
 
 
 
-class VarInt:
-    @staticmethod
-    def pack(data):
-        ordinal = b''
-
-        while data != 0:
-            byte = data & 0x7F
-            data >>= 7
-            ordinal += struct.pack('B', byte | (0x80 if data > 0 else 0))
-        return ordinal
-
-
-    @staticmethod
-    def unpack(sock):
-        data = 0
-        for i in range(5):
-            ordinal = sock.recv(1)
-            if len(ordinal) == 0:
-                break
-
-            byte = ord(ordinal)
-            data |= (byte & 0x7F) << 7*i
-            if not byte & 0x80:
-                break
-        return data
-    
-
-
-class Packet:
-    def __init__(self, id, fields=[]):
-        self.id = id
-        self.fields = fields
-        self.varint = VarInt()
-
-
-    def pack(self):
-        packet = self._encode(self.id)
-
-        for field in self.fields:
-            field = self._encode(field)
-            packet += field
-
-        packet = self.varint.pack(len(packet)) + packet
-        return packet
-
-
-    def _encode(self, data):
-        if type(data) == int:
-            data = struct.pack("H", data)
-
-        elif type(data) == str:
-            data = data.encode("utf-8")
-            data = self.varint.pack(len(data)) + data
-
-        elif type(data) == float:
-            print(data)
-            data = struct.pack(">Q", int(data))
-            print(data)
-
-        return data
-
-
-
-class Client:
+class StatusClient:
     def __init__(self, host="localhost", port=25565, timeout=5):
         self.host = host
         self.port = port
@@ -147,6 +85,6 @@ class Client:
 
 
 if __name__ == "__main__":
-    client = Client("gommehd.net")
+    client = StatusClient("gommehd.net")
     res = client.get_status()
     print(res)
