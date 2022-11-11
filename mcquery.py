@@ -1,6 +1,7 @@
 import socket
 import struct
 
+
 class MCQuery:
     id = 0
     retries = 0

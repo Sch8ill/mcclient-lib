@@ -6,6 +6,7 @@ __author__ = "Sch8ill"
 
 import socket
 import json
+import time
 import struct
 
 
@@ -147,7 +148,11 @@ class StatusClient:
 
 
 if __name__ == "__main__":
-    #client = StatusClient("gommehd.net")
-    client = StatusClient()
+    s = time.time() * 1000
+
+    client = StatusClient(host="185.14.95.45", port=29565)
     res = client.get_status()
+    
+    f = time.time() * 1000
+    print(f - s)
     print(res)
