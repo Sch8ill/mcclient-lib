@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __author__ = "Sch8ill"
 
 
@@ -21,7 +21,6 @@ class Packet:
         packet +=  struct.pack('>l', self.session_id)
         packet += self.payload
         return packet
-
 
 
 
@@ -81,6 +80,7 @@ class QueryClient:
         for key in ["numplayers", "maxplayers", "hostport"]: # convert strings to ints
             data[key] = int(data[key])
 
+        data["software"] = "Vanilla"
         software_parts = data["plugins"].split(":", 1)
         data["software"] = software_parts[0].strip()
         if len(software_parts) == 2:
