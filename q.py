@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-__version__ = "0.1.0"
+__version__ = "0.1.5"
 __author__ = "Sch8ill"
 
-import time
+
 import socket
 import struct
 import random
-import logging
-
 
 class Packet:
     def __init__(self, type, session_id, payload):
@@ -32,47 +30,77 @@ class QueryClient:
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.log = logging.getLogger("Queryclient")
-        self.sock.settimeout(8)
+        self.sock.settimeout(0.1)
 
 
     def _handshake(self):
         self.session_id = random.randint(0, 2147483648) & 0x0F0F0F0F # generate session id from int between 0 and 2147483648
         packet = Packet(
-            9, # packettype 9 for handshaking
+            9, # type 9 for handshaking
             self.session_id,
-            b"" # empty payload
+            b"" # empty payload for handshaking
         )
         packet = packet.pack()
         self._send(packet)
         res = self._recv()
         self.token = struct.pack('>l', int(res[2][:-1])) # extract token from response
-        self.log.debug("challenge token: " + str(self.token))
 
 
     def get_stats(self):
         self._handshake()
-
-        payload = self.token + b"\x00\x00\x00\x00" # challenge token and four zero bytes for full stat request
+        payload = self.token + b"\x00\x00\x00\x00" # challenge token and some padding for full stat request
         packet = Packet(
-            0, # packettype 0 for stat resolving
+            0, # packettype 0 for stat request
             self.session_id,
             payload
         )
         packet = packet.pack()
         self._send(packet)
         res = self._recv()
-        
+        return self._read_query(res)
+
+
+    @staticmethod
+    def _read_query(res):
+        res = res[2][11:] # remove unnecessary padding
+        stats, players = res.split(b"\x00\x00\x01player_\x00\x00") # split stats from players
+        data = {}
+
+        stats = stats.split(b"\x00")
+        stats = [stat.decode("utf-8") for stat in stats] # decode keys and values
+        stats[0] = "motd" # replace "hostname" with "motd"
+        key = True
+        for y, x in enumerate(stats):
+            if key:
+                data[x] = stats[y + 1]
+                key = False
+
+            else:
+                key = True
+
+        for key in ["numplayers", "maxplayers", "hostport"]: # convert strings to ints
+            data[key] = int(data[key])
+
+        software_parts = data["plugins"].split(":", 1)
+        data["software"] = software_parts[0].strip()
+        if len(software_parts) == 2:
+            data["plugins"] = [plugin.strip() for plugin in software_parts.split(";")]
+
+        else:
+            data["plugins"] = []
+
+        players = players[:-2] # remove endpadding
+        players = players.split(b"\x00") # split players
+        data["players"] = [player.decode("utf-8") for player in players if player != b""] # decode players
+        return data
         
 
     def _send(self, packet):
-        self.log.debug("send: " + str(packet))
         return self.sock.sendto(packet, (self.host, self.port))
 
 
     def _recv(self):
-        res = self.sock.recv(2048)
-        self.log.debug("received: " + str(res))
+        res = self.sock.recv(4096)
         type = res[0]
         session_id = res[1:5]
         payload = res[5:]
@@ -87,11 +115,7 @@ class QueryClient:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(format="[%(asctime)s][%(name)s][%(levelname)s]: %(message)s", level=logging.NOTSET)
-
-    s = time.time() * 1000
 
     c = QueryClient(host="185.14.95.45", port=29565)
-    c.get_stats()
-
-    print(time.time() * 1000 - s)
+    print(c.get_stats())
+    #print(c._read_query((0, b"", b'splitnum\x00\x80\x00hostname\x00Ich verkaufe meinen Server, ganz ganz billig, heute Nacht!\x00gametype\x00SMP\x00game_id\x00MINECRAFT\x00version\x001.19.2\x00plugins\x00CraftBukkit on Bukkit 1.19.2-R0.1-SNAPSHOT\x00map\x00world\x00numplayers\x002\x00maxplayers\x0069\x00hostport\x0029565\x00hostip\x00172.18.0.2\x00\x00\x01player_\x00\x00Sch8ill\x00Aikdioo\x00\x00')))
