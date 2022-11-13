@@ -153,6 +153,6 @@ if __name__ == "__main__":
     client = StatusClient(host="185.14.95.45", port=29565)
     res = client.get_status()
     
-    f = time.time() * 1000
-    print(f - s)
+    
+    print(time.time() * 1000 - s)
     print(res)

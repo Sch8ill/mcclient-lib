@@ -3,6 +3,7 @@
 __version__ = "0.1.0"
 __author__ = "Sch8ill"
 
+import time
 import socket
 import struct
 import random
@@ -36,7 +37,7 @@ class QueryClient:
 
 
     def _handshake(self):
-        self.session_id = random.randint(0, 2**31) & 0x0F0F0F0F # generate session id from int between 0 and 2147483648
+        self.session_id = random.randint(0, 2147483648) & 0x0F0F0F0F # generate session id from int between 0 and 2147483648
         packet = Packet(
             9, # packettype 9 for handshaking
             self.session_id,
@@ -88,5 +89,9 @@ class QueryClient:
 if __name__ == "__main__":
     logging.basicConfig(format="[%(asctime)s][%(name)s][%(levelname)s]: %(message)s", level=logging.NOTSET)
 
+    s = time.time() * 1000
+
     c = QueryClient(host="185.14.95.45", port=29565)
     c.get_stats()
+
+    print(time.time() * 1000 - s)
