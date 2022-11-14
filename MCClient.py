@@ -3,8 +3,8 @@
 __version__ = "0.1.7"
 __author__ = "Sch8ill"
 
-from query import QueryClient
-from slp import SLPClient
+from clients.query import QueryClient
+from clients.slp import SLPClient
 
 
 
