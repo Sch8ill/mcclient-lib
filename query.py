@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+__version__ = "0.2.0"
 __author__ = "Sch8ill"
 
 
@@ -83,7 +84,7 @@ class QueryClient:
         software_parts = data["plugins"].split(":", 1)
         data["software"] = software_parts[0].strip()
         if len(software_parts) == 2:
-            data["plugins"] = [plugin.strip() for plugin in software_parts.split(";")]
+            data["plugins"] = [plugin.strip() for plugin in software_parts[1].split(";")]
 
         else:
             data["plugins"] = []

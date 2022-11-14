@@ -8,28 +8,17 @@ from slp import SLPClient
 
 
 
-class MCClient:
-    def __init__(self, host="localhost", port="25565", timeout=0.5):
-        self.host = host
-        self.port = port
-        self.timeout = timeout
-
-
-    def ping(self):
-        client = SLPClient(self.host, self.port, timeout=self.timeout)
-        return client.get_status()
-
-
-    def query(self):
-        client = QueryClient(self.host, self.port, timeout=self.timeout)
-        return client.get_stats()
-
 
 
 if __name__ == "__main__":
-    client = MCClient(host="185.14.95.45", port=29565)
-    slp = client.ping()
-    q = client.query()
+    slp_client = SLPClient(host="mc.lpmitkev.de", port=25565) # random server found through masscan
+    query_client = QueryClient(host="mc.lpmitkev.de", port=25565)
+
+    slp = slp_client.get_status()
+    q = query_client.get_stats()
+
+    if "favicon" in slp:
+        slp.pop("favicon")
 
     print(slp)
     print(q)
