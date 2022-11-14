@@ -80,7 +80,7 @@ class SLPClient:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.settimeout(timeout)
         self.varint = VarInt()
-        self.protocoll_version = b"\x00"
+        self.protocoll_version = self.varint.pack(4)
 
 
     def _connect(self):
