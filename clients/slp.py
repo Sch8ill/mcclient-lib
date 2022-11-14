@@ -14,7 +14,6 @@ class VarInt:
     @staticmethod
     def pack(data):
         ordinal = b''
-
         while data != 0:
             byte = data & 0x7F
             data >>= 7
@@ -47,7 +46,6 @@ class Packet:
 
     def pack(self):
         packet = self._encode(self.id)
-
         for field in self.fields:
             field = self._encode(field)
             packet += field
@@ -68,7 +66,6 @@ class Packet:
             print(data)
             data = struct.pack(">Q", int(data))
             print(data)
-
         return data
 
 
@@ -90,7 +87,6 @@ class SLPClient:
     def _send(self, packet, verbose=False):
         if verbose:
             print("send: " + str(packet))
-
         return self.sock.send(packet)
 
 
@@ -110,7 +106,6 @@ class SLPClient:
 
         else:
             data = self.sock.recv(length)
-
         return data
 
 
@@ -150,5 +145,3 @@ if __name__ == "__main__":
     client = SLPClient(host="185.14.95.45", port=29565)
     res = client.get_status()
     print(res)
-    
-    
