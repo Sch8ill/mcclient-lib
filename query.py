@@ -24,11 +24,11 @@ class Packet:
 
 
 class QueryClient:
-    def __init__(self, host="localhost", port=25565):
+    def __init__(self, host="localhost", port=25565, timeout=0.5):
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.settimeout(0.1)
+        self.sock.settimeout(timeout)
 
 
     def _handshake(self):

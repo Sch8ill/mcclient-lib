@@ -9,18 +9,19 @@ from slp import SLPClient
 
 
 class MCClient:
-    def __init__(self, host="localhost", port="25565"):
+    def __init__(self, host="localhost", port="25565", timeout=0.5):
         self.host = host
         self.port = port
+        self.timeout = timeout
 
 
     def ping(self):
-        client = SLPClient(self.host, self.port)
+        client = SLPClient(self.host, self.port, timeout=self.timeout)
         return client.get_status()
 
 
     def query(self):
-        client = QueryClient(self.host, self.port)
+        client = QueryClient(self.host, self.port, timeout=self.timeout)
         return client.get_stats()
 
 
