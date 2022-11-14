@@ -79,8 +79,8 @@ class SLPClient:
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.settimeout(timeout)
-        self.protocoll_version = b"\x00"
         self.varint = VarInt()
+        self.protocoll_version = b"\x00"
 
 
     def _connect(self):
