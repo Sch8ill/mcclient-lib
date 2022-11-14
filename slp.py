@@ -150,5 +150,6 @@ class SLPClient:
 if __name__ == "__main__":
     client = SLPClient(host="185.14.95.45", port=29565)
     res = client.get_status()
+    print(res)
     
     
