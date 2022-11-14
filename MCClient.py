@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
 
+__version__ = "0.1.7"
+__author__ = "Sch8ill"
 
 from query import QueryClient
 from slp import SLPClient
