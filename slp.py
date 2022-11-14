@@ -117,13 +117,12 @@ class SLPClient:
             25565,
             next_state
         ]
-
         packet = Packet(b"\x00", fields)
         packet = packet.pack()
         self._send(packet)
 
 
-    def get_status(self):
+    def _status_request(self):
         self._connect()
         self._handshake()
 
@@ -136,3 +135,11 @@ class SLPClient:
 
         self.sock.close()
         return res
+
+
+    def get_stats(self):
+        try:
+            return self._status_request()
+            
+        except Exception as e:
+            return e

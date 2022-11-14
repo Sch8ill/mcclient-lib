@@ -13,7 +13,7 @@ if __name__ == "__main__":
     slp_client = SLPClient(host="mc.lpmitkev.de", port=25565) # random server found through masscan
     query_client = QueryClient(host="mc.lpmitkev.de", port=25565)
 
-    slp = slp_client.get_status()
+    slp = slp_client.get_stats()
     q = query_client.get_stats()
 
     if "favicon" in slp:

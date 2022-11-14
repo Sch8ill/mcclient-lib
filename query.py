@@ -43,9 +43,21 @@ class QueryClient:
         self._send(packet)
         res = self._recv()
         self.token = struct.pack('>l', int(res[2][:-1])) # extract token from response
+        
+
+    def _send(self, packet):
+        return self.sock.sendto(packet, (self.host, self.port))
 
 
-    def get_stats(self):
+    def _recv(self):
+        res = self.sock.recv(4096)
+        type = res[0]
+        session_id = res[1:5]
+        payload = res[5:]
+        return type, session_id, payload
+
+
+    def _query_request(self):
         self._handshake()
         payload = self.token + b"\x00\x00\x00\x00" # challenge token and some padding for full stat request
         packet = Packet(
@@ -57,6 +69,14 @@ class QueryClient:
         self._send(packet)
         res = self._recv()
         return self._read_query(res)
+
+
+    def get_stats(self):
+        try:
+            return self._query_request()
+
+        except Exception as e:
+            return e
 
 
     @staticmethod
@@ -93,15 +113,3 @@ class QueryClient:
         players = players.split(b"\x00") # split players
         data["players"] = [player.decode("utf-8") for player in players if player != b""] # decode players
         return data
-        
-
-    def _send(self, packet):
-        return self.sock.sendto(packet, (self.host, self.port))
-
-
-    def _recv(self):
-        res = self.sock.recv(4096)
-        type = res[0]
-        session_id = res[1:5]
-        payload = res[5:]
-        return type, session_id, payload
