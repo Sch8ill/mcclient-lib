@@ -104,12 +104,3 @@ class QueryClient:
         session_id = res[1:5]
         payload = res[5:]
         return type, session_id, payload
-
-
-
-
-
-if __name__ == "__main__":
-
-    c = QueryClient(host="185.14.95.45", port=29565)
-    print(c.get_stats())
