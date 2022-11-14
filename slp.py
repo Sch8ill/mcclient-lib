@@ -131,10 +131,8 @@ class SLPClient:
         packet = packet.pack()
         self._send(packet)
         res = self._recv(extra_varint=True)
-
         res = res.decode("utf-8")
         res = json.loads(res)
 
         self.sock.close()
-
         return res
