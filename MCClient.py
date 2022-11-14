@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-__version__ = "0.1.9"
+__version__ = "0.1.10"
 __author__ = "Sch8ill"
 
-from clients.query import QueryClient
-from clients.slp import SLPClient
+from query import QueryClient
+from slp import SLPClient
 
 
 
