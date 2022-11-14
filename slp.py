@@ -74,7 +74,7 @@ class Packet:
 
 
 
-class StatusClient:
+class SLPClient:
     def __init__(self, host="localhost", port=25565, timeout=5):
         self.host = host
         self.port = port
@@ -148,11 +148,7 @@ class StatusClient:
 
 
 if __name__ == "__main__":
-    s = time.time() * 1000
-
-    client = StatusClient(host="185.14.95.45", port=29565)
+    client = SLPClient(host="185.14.95.45", port=29565)
     res = client.get_status()
     
     
-    print(time.time() * 1000 - s)
-    print(res)

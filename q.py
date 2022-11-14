@@ -111,11 +111,8 @@ class QueryClient:
 
 
 
-
-
-
 if __name__ == "__main__":
 
     c = QueryClient(host="185.14.95.45", port=29565)
     print(c.get_stats())
-    #print(c._read_query((0, b"", b'splitnum\x00\x80\x00hostname\x00Ich verkaufe meinen Server, ganz ganz billig, heute Nacht!\x00gametype\x00SMP\x00game_id\x00MINECRAFT\x00version\x001.19.2\x00plugins\x00CraftBukkit on Bukkit 1.19.2-R0.1-SNAPSHOT\x00map\x00world\x00numplayers\x002\x00maxplayers\x0069\x00hostport\x0029565\x00hostip\x00172.18.0.2\x00\x00\x01player_\x00\x00Sch8ill\x00Aikdioo\x00\x00')))
+    
