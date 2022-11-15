@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = "0.2.0"
+__version__ = "0.2.2"
 __author__ = "Sch8ill"
 
 
@@ -83,7 +83,7 @@ class SLPClient:
 
 
     def _connect(self):
-        if not self.connected: # adds ability to "implant" an alredy connected socket
+        if not self.connected: # adds ability to "implant" an alredy connected socket, usefull for scanning
             self.sock.connect((self.host, self.port))
 
 
