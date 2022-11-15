@@ -11,7 +11,7 @@ import struct
 
 
 
-class VarInt:
+class VarInt: # class to pack and unpack Varints
     @staticmethod
     def pack(data):
         ordinal = b''
@@ -51,7 +51,7 @@ class Packet:
             field = self._encode(field)
             packet += field
 
-        packet = self.varint.pack(len(packet)) + packet
+        packet = self.varint.pack(len(packet)) + packet # add packetlength
         return packet
 
 
@@ -76,18 +76,18 @@ class SLPClient:
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connected = False
         self.sock.settimeout(timeout)
         self.varint = VarInt()
         self.protocoll_version = self.varint.pack(4)
 
 
     def _connect(self):
-        self.sock.connect((self.host, self.port))
+        if not self.connected: # adds ability to "implant" an alredy connected socket
+            self.sock.connect((self.host, self.port))
 
 
-    def _send(self, packet, verbose=False):
-        if verbose:
-            print("send: " + str(packet))
+    def _send(self, packet):
         return self.sock.send(packet)
 
 
@@ -115,7 +115,7 @@ class SLPClient:
             self.protocoll_version,
             self.host,
             25565,
-            next_state
+            next_state # next state b"\x01" for status request
         ]
         packet = Packet(b"\x00", fields)
         packet = packet.pack()
@@ -124,9 +124,9 @@ class SLPClient:
 
     def _status_request(self):
         self._connect()
-        self._handshake()
+        self._handshake() # handshake + set connection state
 
-        packet = Packet(b"\x00")
+        packet = Packet(b"\x00") # send status request
         packet = packet.pack()
         self._send(packet)
         res = self._recv(extra_varint=True)
