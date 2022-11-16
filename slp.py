@@ -98,7 +98,7 @@ class SLPClient:
 
         if extra_varint:
             if packet_id > length:
-                self._unpack_varint(self.sock)
+                self.varint.unpack(self.sock)
 
             extra_length = self.varint.unpack(self.sock)
 
@@ -130,16 +130,16 @@ class SLPClient:
         packet = packet.pack()
         self._send(packet)
         res = self._recv(extra_varint=True)
+        self.sock.close()
         res = res.decode("utf-8")
         res = json.loads(res)
 
-        self.sock.close()
         return res
 
 
     def get_stats(self):
         try:
             return self._status_request()
-            
+
         except Exception as e:
             return e
