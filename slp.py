@@ -83,12 +83,36 @@ class SLPClient:
 
 
     def _connect(self):
-        if not self.connected: # adds ability to "implant" an alredy connected socket, usefull for scanning
+        if self.connected == False: # adds ability to "implant" an alredy connected socket, usefull for scanning
             self.sock.connect((self.host, self.port))
+            self.connected = True
+
+        elif self.connected == None:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.sock.connect((self.host, self.port))
+            self.connected = True
 
 
     def _send(self, packet):
         return self.sock.send(packet)
+
+
+    def legacy_ping(self):
+        self._connect()
+        self._send(b"\xFE") # legacy status request
+        res = self.sock.recv(4096)
+
+        self.sock.close()
+        self.connected = None
+
+        res = res[4:] # remove padding and other headers
+        res = res.decode("UTF-16", errors="ignore")
+        data = {}
+        res = res.split("§") # data is split with "§"
+        data["motd"] = "".join(res[:-2])
+        data["online"] = int(res[-2])
+        data["max"] = int(res[-1])
+        return data
 
 
     def _recv(self, extra_varint=False):
@@ -130,7 +154,10 @@ class SLPClient:
         packet = packet.pack()
         self._send(packet)
         res = self._recv(extra_varint=True)
+
         self.sock.close()
+        self.connected = None
+
         res = res.decode("utf-8")
         res = json.loads(res)
 

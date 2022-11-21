@@ -14,6 +14,7 @@ slp_client = SLPClient(host="mc.lpmitkev.de", port=25565) # random server found 
 query_client = QueryClient(host="mc.lpmitkev.de", port=25565)
 
 slp = slp_client.get_stats()
+l_slp = slp_client.legacy_ping()
 q = query_client.get_stats()
 
 try:
@@ -23,6 +24,7 @@ except:
     pass
 
 print(slp)
+print(l_slp)
 print(q)
 
 
