@@ -30,7 +30,6 @@ class VarInt: # class to pack and unpack Varints
 
 
 
-
 class Packet:
     def __init__(self, fields=[]):
         self.fields = fields
