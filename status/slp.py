@@ -10,7 +10,6 @@ import time
 import struct
 
 
-
 class VarInt: # class to pack and unpack Varints
     @staticmethod
     def pack(data):
@@ -22,16 +21,31 @@ class VarInt: # class to pack and unpack Varints
         return ordinal
 
 
+    @staticmethod
+    def unpack(sock):
+        data = 0
+        for i in range(5):
+            ordinal = sock.recv(1)
+            if len(ordinal) == 0:
+                break
+
+            byte = ord(ordinal)
+            data |= (byte & 0x7F) << 7*i
+            if not byte & 0x80:
+                break
+
+        return data
+
+
 
 class Packet:
-    def __init__(self, id, fields=[]):
-        self.id = id
+    def __init__(self, fields=[]):
         self.fields = fields
         self.varint = VarInt()
 
 
     def pack(self):
-        packet = self._encode(self.id)
+        packet = b""
         for field in self.fields:
             field = self._encode(field)
             packet += field
@@ -74,8 +88,8 @@ class SLPClient:
 
         elif self.connected == None:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.connect((self.host, self.port))
-            self.connected = True
+            self.connected = False
+            self._connect()
 
 
     def _send(self, packet):
@@ -85,48 +99,40 @@ class SLPClient:
     def legacy_ping(self):
         self._connect()
         self._send(b"\xFE") # legacy status request
-        res = self.sock.recv(4096)
+        raw_res = self._recv()
+        #raw_res = self.sock.recv(4096)
 
         self.sock.close()
         self.connected = None
 
-        res = res[4:] # remove padding and other headers
+        res = raw_res[1][1:] # remove padding and other headers
         res = res.decode("UTF-16", errors="ignore")
         data = {}
         res = res.split("§") # data is split with "§"
+
         data["motd"] = "".join(res[:-2])
         data["online"] = int(res[-2])
         data["max"] = int(res[-1])
         return data
 
 
-    def _recv(self, extra_varint=False):
+    def _recv(self):
         length = self.varint.unpack(self.sock)
         packet_id = self.varint.unpack(self.sock)
-        data = b""
+        data = self.sock.recv(length)
 
-        if extra_varint:
-            if packet_id > length:
-                self.varint.unpack(self.sock)
-
-            extra_length = self.varint.unpack(self.sock)
-
-            while len(data) < extra_length:
-                data += self.sock.recv(extra_length)
-
-        else:
-            data = self.sock.recv(length)
-        return data
+        return packet_id, data
 
 
     def _handshake(self, next_state=b"\x01"):
         fields = [
+            b"\x00", # packet id
             self.protocoll_version,
             self.host,
             25565,
             next_state # next state b"\x01" for status request
         ]
-        packet = Packet(b"\x00", fields)
+        packet = Packet(fields)
         packet = packet.pack()
         self._send(packet)
 
@@ -135,14 +141,15 @@ class SLPClient:
         self._connect()
         self._handshake() # handshake + set connection state
 
-        packet = Packet(b"\x00") # send status request
+        packet = Packet([b"\x00"]) # send status request
         packet = packet.pack()
         self._send(packet)
-        res = self._recv(extra_varint=True)
+        res = self._recv()
 
         self.sock.close()
         self.connected = None
 
+        res = res[1][2:]
         res = res.decode("utf-8")
         res = json.loads(res)
 

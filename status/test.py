@@ -14,8 +14,11 @@ slp_client = SLPClient(host="mc.lpmitkev.de", port=25565) # random server found 
 query_client = QueryClient(host="mc.lpmitkev.de", port=25565)
 
 slp = slp_client.get_stats()
+print(slp)
 l_slp = slp_client.legacy_ping()
+print(l_slp)
 q = query_client.get_stats()
+print(q)
 
 try:
     if "favicon" in slp:
@@ -23,9 +26,6 @@ try:
 except:
     pass
 
-print(slp)
-print(l_slp)
-print(q)
 
 
 
