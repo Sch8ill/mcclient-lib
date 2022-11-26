@@ -12,9 +12,7 @@ from utils import Packet, VarInt
 
 class SLPClient(MCClient):
     def __init__(self, host="localhost", port=25565, timeout=5):
-        
         super().__init__(host=host, port=port, timeout=timeout)
-
 
 
     def legacy_ping(self):
