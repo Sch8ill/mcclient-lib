@@ -1,13 +1,10 @@
 
+__version__ = "0.2.7"
 __author__ = "Sch8ill"
 
 
 import socket
-import json
-import time
-import struct
 from utils import Packet, VarInt
-
 
 
 
@@ -24,7 +21,7 @@ class MCClient:
 
 
     def _connect(self):
-        if self.connected == False: # adds ability to "implant" an alredy connected socket, usefull for scanning
+        if self.connected == False: # adds ability to "implant" an alredy connected socket, usefull for portscanning
             self.sock.connect((self.host, self.port))
             self.connected = True
 

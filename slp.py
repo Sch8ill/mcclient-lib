@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 
-__version__ = "0.2.5"
 __author__ = "Sch8ill"
 
 
-import socket
 import json
-import time
-import struct
 from client import MCClient
 from utils import Packet, VarInt
 
