@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __author__ = "Sch8ill"
 
 
@@ -8,7 +8,7 @@ import socket
 import struct
 import random
 
-class Packet:
+class QueryPacket:
     def __init__(self, type, session_id, payload):
         self.type = type
         self.session_id = session_id
@@ -34,10 +34,10 @@ class QueryClient:
 
     def _handshake(self):
         self.session_id = random.randint(0, 2147483648) & 0x0F0F0F0F # generate session id from int between 0 and 2147483648
-        packet = Packet(
+        packet = QueryPacket(
             9, # type 9 for handshaking
             self.session_id,
-            b"" # empty payload for handshaking
+            b"" # empty payload
         )
         packet = packet.pack()
         self._send(packet)
@@ -60,8 +60,8 @@ class QueryClient:
     def _query_request(self):
         self._handshake()
         payload = self.token + b"\x00\x00\x00\x00" # challenge token and some padding for full stat request
-        packet = Packet(
-            0, # packettype 0 for stat request
+        packet = QueryPacket(
+            0, # packettype 0 for status request
             self.session_id,
             payload
         )
