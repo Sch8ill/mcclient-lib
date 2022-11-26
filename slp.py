@@ -67,10 +67,10 @@ class SLPClient(MCClient):
 
 
     def get_stats(self):
-        #try:
+        try:
             self._connect()
             self._handshake() # handshake + set connection state
             return self._status_request()
-"""
+
         except Exception as e:
-            return e"""
+            return e
