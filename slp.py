@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = "0.2.2"
+__version__ = "0.2.5"
 __author__ = "Sch8ill"
 
 
@@ -76,6 +76,7 @@ class SLPClient:
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected = False
+        self.retries = 0
         self.sock.settimeout(timeout)
         self.varint = VarInt()
         self.protocoll_version = self.varint.pack(4)
@@ -95,17 +96,31 @@ class SLPClient:
     def _send(self, packet):
         return self.sock.send(packet)
 
+    
+    def _recv(self):
+        length = self.varint.unpack(self.sock)
+        packet_id = self.varint.unpack(self.sock)
+        data = self.sock.recv(length)
+        if len(data) < length - 4:
+            loss = True
+        
+        else:
+            loss = False
+        return loss, packet_id, data
+
+
+    def _flush(self, length=8192):
+        self.sock.recv(length)
 
     def legacy_ping(self):
         self._connect()
         self._send(b"\xFE") # legacy status request
         raw_res = self._recv()
-        #raw_res = self.sock.recv(4096)
 
         self.sock.close()
         self.connected = None
 
-        res = raw_res[1][1:] # remove padding and other headers
+        res = raw_res[2][1:] # remove padding and other headers
         res = res.decode("UTF-16", errors="ignore")
         data = {}
         res = res.split("§") # data is split with "§"
@@ -114,14 +129,6 @@ class SLPClient:
         data["online"] = int(res[-2])
         data["max"] = int(res[-1])
         return data
-
-
-    def _recv(self):
-        length = self.varint.unpack(self.sock)
-        packet_id = self.varint.unpack(self.sock)
-        data = self.sock.recv(length)
-
-        return packet_id, data
 
 
     def _handshake(self, next_state=b"\x01"):
@@ -138,26 +145,35 @@ class SLPClient:
 
 
     def _status_request(self):
-        self._connect()
-        self._handshake() # handshake + set connection state
-
         packet = Packet([b"\x00"]) # send status request
         packet = packet.pack()
         self._send(packet)
         res = self._recv()
 
+        if res[0]:
+            if self.retries < 3:
+                self.retries += 1
+                self._flush()
+                self._status_request()
+
+            else:
+                raise Exception("Max retries exceeded.")
+
         self.sock.close()
         self.connected = None
 
-        res = res[1][2:]
+        res = res[2][2:]
         res = res.decode("utf-8")
         res = json.loads(res)
+        self.retries = 0
 
         return res
 
 
     def get_stats(self):
         try:
+            self._connect()
+            self._handshake() # handshake + set connection state
             return self._status_request()
 
         except Exception as e:
