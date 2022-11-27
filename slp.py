@@ -15,13 +15,12 @@ class SLPClient(MCClient):
         super().__init__(host=host, port=port, timeout=timeout)
 
 
-    def legacy_ping(self):
+    def legacy_ping(self): # Todo: implement packetloss handling
         self._connect()
         self._send(b"\xFE") # legacy status request
         raw_res = self._recv()
 
-        self.sock.close()
-        self.connected = None
+        self._close()
 
         res = raw_res[2][1:] # remove padding and other headers
         res = res.decode("UTF-16", errors="ignore")
