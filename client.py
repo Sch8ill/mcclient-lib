@@ -9,7 +9,7 @@ from utils import Packet, VarInt
 
 
 class MCClient:
-    def __init__(self, host="localhost", port=25565, timeout=5):
+    def __init__(self, host="localhost", port=25565, timeout=5, version=47):
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,11 +17,11 @@ class MCClient:
         self.connected = False
         self.retries = 0
         self.sock.settimeout(timeout)
-        self.protocoll_version = self.varint.pack(4)
+        self.protocoll_version = self.varint.pack(version)
 
 
     def _connect(self):
-        if self.connected == False: # adds ability to "implant" an alredy connected socket, usefull for portscanning
+        if self.connected == False:
             self.sock.connect((self.host, self.port))
             self.connected = True
 
@@ -65,13 +65,13 @@ class MCClient:
 
 
     def _handshake(self, next_state=1):
-        fields = [
+        fields = (
             b"\x00", # packet id
             self.protocoll_version,
             self.host,
             25565,
             self.varint.pack(next_state)# next state 1 for status request
-        ]
+        )
         packet = Packet(fields)
         packet = packet.pack()
         self._send(packet)
