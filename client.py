@@ -37,6 +37,7 @@ class BaseClient:
     def _recv(self):
         length = self.varint.unpack(self.sock)
         packet_id = self.varint.unpack(self.sock)
+        packet_id = self.varint.pack(packet_id)
         data = self.sock.recv(length)
         if len(data) < length - 4:
             loss = True
