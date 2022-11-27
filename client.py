@@ -8,14 +8,13 @@ from utils import Packet, VarInt
 
 
 
-class MCClient:
+class BaseClient:
     def __init__(self, host="localhost", port=25565, timeout=5, version=47):
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.varint = VarInt()
         self.connected = False
-        self.retries = 0
         self.sock.settimeout(timeout)
         self.protocoll_version = self.varint.pack(version)
 

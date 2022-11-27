@@ -59,7 +59,7 @@ class QueryClient:
 
     def _query_request(self):
         self._handshake()
-        payload = self.token + b"\x00\x00\x00\x00" # challenge token and some padding for full stat request
+        payload = self.token + b"\x00\x00\x00\x00" # challenge token and some padding for full status request
         packet = QueryPacket(
             0, # packettype 0 for status request
             self.session_id,

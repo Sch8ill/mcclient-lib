@@ -4,15 +4,16 @@ __author__ = "Sch8ill"
 
 
 import json
-from client import MCClient
+from client import BaseClient
 from utils import Packet, VarInt
 
 
 
 
-class SLPClient(MCClient):
+class SLPClient(BaseClient):
     def __init__(self, host="localhost", port=25565, timeout=5):
         super().__init__(host=host, port=port, timeout=timeout)
+        self.retries = 0
 
 
     def legacy_ping(self): # Todo: implement packetloss handling
