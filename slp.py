@@ -5,7 +5,7 @@ __author__ = "Sch8ill"
 
 import json
 from client import BaseClient
-from utils import Packet, VarInt
+from utils import Packet
 
 
 
