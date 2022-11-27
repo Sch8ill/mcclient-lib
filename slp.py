@@ -40,17 +40,16 @@ class SLPClient(MCClient):
         self._send(packet)
         res = self._recv()
 
-        if res[0]:
+        if res[0]: # if packetloss accured
             if self.retries < 3:
                 self.retries += 1
-                self._flush()
-                self._status_request()
+                self._reset()
+                return self._status_request()
 
             else:
                 raise Exception("Max retries exceeded.")
 
-        self.sock.close()
-        self.connected = None
+        self._close(flush=False)
 
         res = res[2][2:]
         res = res.decode("utf-8")

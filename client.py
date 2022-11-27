@@ -47,6 +47,19 @@ class MCClient:
         return loss, packet_id, data
 
 
+    def _close(self, flush=True):
+        if flush:
+            self._flush()
+        self.sock.close()
+        self.connected = None
+
+
+    def _reset(self):
+        self._close()
+        self._connect()
+        self._handshake()
+
+
     def _flush(self, length=8192):
         self.sock.recv(length)
 
