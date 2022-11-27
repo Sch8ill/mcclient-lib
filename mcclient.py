@@ -2,6 +2,7 @@
 __version__ = "0.0.1"
 __author__ = "Sch8ill"
 
+import time
 import struct
 from client import BaseClient
 from utils import Packet, VarInt
@@ -30,4 +31,6 @@ class MCClient(BaseClient):
         packet = Packet(fields)
         packet = packet.pack()
         self._send(packet)
+        print(self._recv())
+        time.sleep(1)
         print(self._recv())
