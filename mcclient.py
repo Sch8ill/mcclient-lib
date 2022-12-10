@@ -2,8 +2,9 @@
 __version__ = "0.0.1"
 __author__ = "Sch8ill"
 
+
 import time
-import struct
+import socket
 from client import BaseClient
 from utils import Packet, VarInt
 

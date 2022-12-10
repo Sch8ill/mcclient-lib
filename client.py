@@ -4,7 +4,7 @@ __author__ = "Sch8ill"
 
 
 import socket
-from utils import Packet, VarInt
+from MCClient.utils import Packet, VarInt
 
 
 
