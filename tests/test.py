@@ -1,5 +1,5 @@
 
-from mcclient.mcclient import MCClient
+from mcclient import MCClient
 
 class Player:
     name = "testbot69"
