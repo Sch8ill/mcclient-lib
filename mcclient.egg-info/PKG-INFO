@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: mcclient
-Version: 0.0.10
+Version: 0.3.1
 Summary: A lightweight Minecraft client
 Author-email: Sch8ill <author@example.com>
 Project-URL: Homepage, https://github.com/pypa/sampleproject
