@@ -5,5 +5,6 @@ venv/
 .replit
 replit.nix
 
-mcclient.egg-info/
+*.egg-info/
 build/
+dist/
