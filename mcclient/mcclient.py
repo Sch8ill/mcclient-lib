@@ -5,8 +5,8 @@ __author__ = "Sch8ill"
 
 import time
 import socket
-from client import BaseClient
-from utils import Packet, VarInt
+from mcclient.client import BaseClient
+from mcclient.utils import Packet, VarInt
 
 
 class MCClient(BaseClient):

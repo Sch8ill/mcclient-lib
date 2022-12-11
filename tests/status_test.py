@@ -2,8 +2,8 @@
 
 __author__ = "Sch8ill"
 
-from query import QueryClient
-from slp import SLPClient
+from mcclient import QueryClient
+from mcclient import SLPClient
 
 
 

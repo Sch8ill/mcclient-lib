@@ -5,8 +5,8 @@ __author__ = "Sch8ill"
 
 import json
 import socket
-from MCClient.client import BaseClient
-from MCClient.utils import Packet
+from mcclient.client import BaseClient
+from mcclient.utils import Packet, VarInt
 
 
 

@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+mcclient/__init__.py
+mcclient/client.py
+mcclient/mcclient.py
+mcclient/query.py
+mcclient/slp.py
+mcclient/utils.py
+mcclient.egg-info/PKG-INFO
+mcclient.egg-info/SOURCES.txt
+mcclient.egg-info/dependency_links.txt
+mcclient.egg-info/top_level.txt
