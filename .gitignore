@@ -6,3 +6,4 @@ venv/
 replit.nix
 
 mcclient.egg-info/
+build/
