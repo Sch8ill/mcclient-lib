@@ -48,7 +48,7 @@ class Packet:
 
     def _encode(self, data):
         if type(data) == int:
-            data = struct.pack("H", data)
+            data = struct.pack(">H", data)
 
         elif type(data) == str:
             data = data.encode("utf-8")
