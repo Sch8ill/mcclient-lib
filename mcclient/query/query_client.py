@@ -6,22 +6,7 @@ __author__ = "Sch8ill"
 import socket
 import struct
 import random
-
-class QueryPacket:
-    def __init__(self, type, session_id, payload):
-        self.type = type
-        self.session_id = session_id
-        self.payload = payload
-
-
-    def pack(self):
-        packet = b"\xFE\xFD" # every packet starts with this, blame mojang
-        packet += struct.pack("!B", self.type)
-        packet +=  struct.pack('>l', self.session_id)
-        packet += self.payload
-        return packet
-
-
+from mcclient.query.packet import QueryPacket
 
 class QueryClient:
     def __init__(self, host="localhost", port=25565, timeout=0.5):
