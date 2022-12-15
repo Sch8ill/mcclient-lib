@@ -4,7 +4,6 @@ __author__ = "Sch8ill"
 
 import time
 from mcclient.base_client import BaseClient
-from mcclient.encoding.varint import VarInt
 from mcclient.encoding.packet import Packet
 
 
@@ -25,7 +24,6 @@ class MCClient(BaseClient):
         fields = (
             b"\x00", # packet id
             player.name,
-            False,
             False
         )
         packet = Packet(fields)

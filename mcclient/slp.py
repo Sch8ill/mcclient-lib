@@ -11,7 +11,6 @@ from mcclient.encoding.packet import Packet
 
 
 
-
 class SLPClient(BaseClient):
     def __init__(self, host="localhost", port=25565, timeout=5):
         super().__init__(host=host, port=port, timeout=timeout)
