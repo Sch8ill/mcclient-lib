@@ -3,7 +3,6 @@ __author__ = "Sch8ill"
 
 
 import time
-import socket
 from mcclient.base_client import BaseClient
 from mcclient.encoding.varint import VarInt
 from mcclient.encoding.packet import Packet
