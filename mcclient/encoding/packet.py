@@ -1,5 +1,6 @@
 
 import struct
+from mcclient.encoding.varint import VarInt
 
 
 class Packet:
