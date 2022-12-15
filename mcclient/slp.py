@@ -5,8 +5,9 @@ __author__ = "Sch8ill"
 
 import json
 import socket
-from mcclient.client import BaseClient
-from mcclient.utils import Packet, VarInt
+from mcclient.base_client import BaseClient
+from mcclient.encoding.varint import VarInt
+from mcclient.encoding.packet import Packet
 
 
 
@@ -19,19 +20,18 @@ class SLPClient(BaseClient):
 
     def legacy_ping(self): # Todo: implement packetloss handling
         self._connect()
-        self._send(b"\xFE") # legacy status request
-        raw_res = self._recv()
-
+        self._send(b"\xFE\x01") # legacy status request
+        raw_res = self.sock.recv(1024)
         self._close()
 
-        res = raw_res[2][1:] # remove padding and other headers
-        res = res.decode("UTF-16", errors="ignore")
+        res = raw_res[3:] # remove padding and other headers
+        res = res.decode("UTF-16-be", errors="ignore")
+        res = res.split("\x00")
         data = {}
-        res = res.split("§") # data is split with "§"
-
-        data["motd"] = "".join(res[:-2])
-        data["online"] = int(res[-2])
-        data["max"] = int(res[-1])
+        data["version"] = res[2]
+        data["motd"] = res[3]
+        data["online"] = res[4]
+        data["max"] = res[5]
         return data
 
 
@@ -61,80 +61,10 @@ class SLPClient(BaseClient):
 
 
     def get_stats(self):
-        try:
-            self._connect()
-            self._handshake() # handshake + set connection state
-            return self._status_request()
-
-        except Exception as e:
-            return e
-
-
-
-class BaseClient:
-    def __init__(self, host="localhost", port=25565, timeout=5, version=47):
-        self.host = host
-        self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.varint = VarInt()
-        self.connected = False
-        self.sock.settimeout(timeout)
-        self.protocoll_version = self.varint.pack(version)
-
-
-    def _connect(self):
-        if self.connected == False:
-            self.sock.connect((self.host, self.port))
-            self.connected = True
-
-        elif self.connected == None:
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.connected = False
-            self._connect()
-
-
-    def _send(self, packet):
-        return self.sock.send(packet)
-
-    
-    def _recv(self):
-        length = self.varint.unpack(self.sock)
-        packet_id = self.varint.unpack(self.sock)
-        packet_id = self.varint.pack(packet_id)
-        data = self.sock.recv(length)
-        if len(data) < length - 4:
-            loss = True
-        
-        else:
-            loss = False
-        return loss, packet_id, data
-
-
-    def _close(self, flush=True):
-        if flush:
-            self._flush()
-        self.sock.close()
-        self.connected = None
-
-
-    def _reset(self):
-        self._close()
+        #try:
         self._connect()
-        self._handshake()
+        self._handshake() # handshake + set connection state
+        return self._status_request()
 
-
-    def _flush(self, length=8192):
-        self.sock.recv(length)
-
-
-    def _handshake(self, next_state=1):
-        fields = (
-            b"\x00", # packet id
-            self.protocoll_version,
-            self.host,
-            25565,
-            self.varint.pack(next_state)# next state 1 for status request
-        )
-        packet = Packet(fields)
-        packet = packet.pack()
-        self._send(packet)
+        #except Exception as e:
+        #    return e

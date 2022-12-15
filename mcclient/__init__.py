@@ -1,5 +1,5 @@
 from mcclient.mcclient import MCClient
-from mcclient.client import BaseClient
+from mcclient.base_client import BaseClient
 from mcclient.slp import SLPClient
 from mcclient.query import QueryClient
 
