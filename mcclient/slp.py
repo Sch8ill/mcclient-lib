@@ -61,10 +61,10 @@ class SLPClient(BaseClient):
 
 
     def get_stats(self):
-        #try:
-        self._connect()
-        self._handshake() # handshake + set connection state
-        return self._status_request()
+        try:
+            self._connect()
+            self._handshake() # handshake + set connection state
+            return self._status_request()
 
-        #except Exception as e:
-        #    return e
+        except Exception as e:
+            return e
