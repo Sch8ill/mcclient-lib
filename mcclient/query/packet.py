@@ -14,4 +14,3 @@ class QueryPacket:
         packet +=  struct.pack('>l', self.session_id)
         packet += self.payload
         return packet
-
