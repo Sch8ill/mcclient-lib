@@ -150,3 +150,52 @@ class QueryResponse(StatusResponse):
         self.players = Players(self.res["numplayers"], self.res["maxplayers"], self.res["players"])
         self.version = Version(self.res["version"], None)
         self.version.software = self.res["software"]
+
+
+
+class BedrockResponse(StatusResponse):
+    def __init__(self, ip, port, raw_res):
+        super().__init__(ip, port, raw_res)
+
+        self.res = {}
+        self.res["brand"] = self.raw_res[0]
+        self.res["motd"] = self.raw_res[1]
+        self.res["protocol"] = int(self.raw_res[2])
+        self.res["version"] = self.raw_res[3]
+        self.res["online_players"] = int(self.raw_res[4])
+        self.res["max_players"] = int(self.raw_res[5])
+        self.res["server_id"] = self.raw_res[6]
+
+        self.res["map"] = None
+        self.res["gametype"] = None
+        if len(self.raw_res) > 6:
+            self.res["map"] = self.raw_res[7]
+
+        if len(self.raw_res) > 7:
+            self.res["gametype"] = self.raw_res[8]
+
+        self.brand = self.res["brand"]
+        self.motd = self.res["motd"]
+        self.protocol = self.res["protocol"]
+        self.version = self.res["version"]
+        self.online_players = self.res["online_players"]
+        self.max_players = self.res["max_players"]
+        self.server_id = self.res["server_id"]
+        self.map = self.res["map"]
+        self.gametype = self.res["gametype"]
+
+
+
+
+
+"""
+protocol=int(decoded_data[2]),
+brand=decoded_data[0],
+version=decoded_data[3],
+latency=latency,
+players_online=int(decoded_data[4]),
+players_max=int(decoded_data[5]),
+motd=decoded_data[1],
+map_=map_,
+gamemode=gamemode,
+"""
