@@ -8,6 +8,6 @@ player = Player()
 
 
 
-c = MCClient(version=761)
+c = MCClient(host="mc.internetpolice.ga", port=29565, version=761)
 c.connect()
 c.login(player)
