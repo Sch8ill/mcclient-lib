@@ -5,7 +5,6 @@ venv/
 .git/
 .replit
 replit.nix
-
 *.egg-info/
 build/
 dist/
