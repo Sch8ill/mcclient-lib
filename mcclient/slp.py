@@ -4,8 +4,9 @@ __author__ = "Sch8ill"
 
 
 import json
-import socket
 from mcclient.base_client import BaseClient
+from mcclient.response import SLPResponse
+from mcclient.response import SLPLegacyResponse
 from mcclient.encoding.varint import VarInt
 from mcclient.encoding.packet import Packet
 
@@ -26,12 +27,8 @@ class SLPClient(BaseClient):
         res = raw_res[3:] # remove padding and other headers
         res = res.decode("UTF-16-be", errors="ignore")
         res = res.split("\x00")
-        data = {}
-        data["version"] = res[2]
-        data["motd"] = res[3]
-        data["online"] = res[4]
-        data["max"] = res[5]
-        return data
+        res = SLPLegacyResponse(self.host, self.port, res)
+        return res
 
 
     def _status_request(self):
@@ -54,16 +51,12 @@ class SLPClient(BaseClient):
         res = res[2][2:]
         res = res.decode("utf-8")
         res = json.loads(res)
+        res = SLPResponse(self.host, self.port, res)
         self.retries = 0
-
         return res
 
 
     def get_stats(self):
-        try:
-            self._connect()
-            self._handshake() # handshake + set connection state
-            return self._status_request()
-
-        except Exception as e:
-            return e
+        self._connect()
+        self._handshake() # handshake + set connection state
+        return self._status_request()

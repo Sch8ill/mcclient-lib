@@ -6,6 +6,7 @@ __author__ = "Sch8ill"
 import socket
 import struct
 import random
+from mcclient.response import QueryResponse
 from mcclient.query.packet import QueryPacket
 
 class QueryClient:
@@ -52,7 +53,9 @@ class QueryClient:
         packet = packet.pack()
         self._send(packet)
         res = self._recv()
-        return self._read_query(res)
+        res = self._read_query(res)
+        res = QueryResponse(self.host, self.port, res)
+        return res
 
 
     def get_stats(self):
