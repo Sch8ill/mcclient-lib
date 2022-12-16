@@ -183,19 +183,3 @@ class BedrockResponse(StatusResponse):
         self.server_id = self.res["server_id"]
         self.map = self.res["map"]
         self.gametype = self.res["gametype"]
-
-
-
-
-
-"""
-protocol=int(decoded_data[2]),
-brand=decoded_data[0],
-version=decoded_data[3],
-latency=latency,
-players_online=int(decoded_data[4]),
-players_max=int(decoded_data[5]),
-motd=decoded_data[1],
-map_=map_,
-gamemode=gamemode,
-"""
