@@ -18,13 +18,13 @@ class Version:
 
 
 class StatusResponse:
-    def __init__(self, ip, port, raw_res):
-        self.ip = ip
+    def __init__(self, host, port, raw_res):
+        self.host = host
         self.port = port
         self.raw_res = raw_res
         self.res = {}
 
-        self.res["ip"] = ip
+        self.res["host"] = self.host
         self.res["port"] = port
 
     
@@ -38,8 +38,8 @@ class StatusResponse:
 
 
 class SLPResponse(StatusResponse):
-    def __init__(self, ip, port, raw_res):
-        super().__init__(ip, port, raw_res)
+    def __init__(self, host, port, raw_res):
+        super().__init__(host, port, raw_res)
 
         self.res = self._parse_slp_res(self.raw_res)
         self.motd = self.res["motd"]
@@ -113,8 +113,8 @@ class SLPResponse(StatusResponse):
 
 
 class SLPLegacyResponse(StatusResponse):
-    def __init__(self, ip, port, raw_res):
-        super().__init__(ip, port, raw_res)
+    def __init__(self, host, port, raw_res):
+        super().__init__(host, port, raw_res)
 
         self.res = self._parse_res(self.raw_res)
         self.motd = self.res["motd"]
@@ -134,8 +134,8 @@ class SLPLegacyResponse(StatusResponse):
 
 
 class QueryResponse(StatusResponse):
-    def __init__(self, ip, port, raw_res):
-        super().__init__(ip, port, raw_res)
+    def __init__(self, host, port, raw_res):
+        super().__init__(host, port, raw_res)
 
         self.res = raw_res
 
@@ -154,8 +154,8 @@ class QueryResponse(StatusResponse):
 
 
 class BedrockResponse(StatusResponse):
-    def __init__(self, ip, port, raw_res):
-        super().__init__(ip, port, raw_res)
+    def __init__(self, host, port, raw_res):
+        super().__init__(host, port, raw_res)
 
         self.res = {}
         self.res["brand"] = self.raw_res[0]
