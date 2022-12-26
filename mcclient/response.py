@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> 017ae1b9ab3d8f7595ac121e5ed97450b184a6ce
 import datetime
 
 
