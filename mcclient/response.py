@@ -30,9 +30,9 @@ class StatusResponse:
     
     @staticmethod
     def _remove_color_codes(cstr):
-        color_codes = ["§a", "§A", "§b", "§c", "§d", "§e", "§f", "§k", "§l", "§m", "§n", "§o", "§r", "§x", "§0", "§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9"]
+        color_codes = ["a", "b", "c", "d", "e", "f", "k", "l", "m", "n", "o", "r", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         for code in color_codes:
-            cstr = cstr.replace(code, "")
+            cstr = cstr.replace("§" + code, "")
         return cstr
 
 
