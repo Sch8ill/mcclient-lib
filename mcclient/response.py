@@ -45,6 +45,7 @@ class SLPResponse(StatusResponse):
         self.motd = self.res["motd"]
         self.version = Version(self.res["version"]["name"], self.res["version"]["protocol"])
         self.players = Players(self.res["players"]["online"], self.res["players"]["max"], self.res["players"]["list"])
+        self.timestamp = str(datetime.datetime.now())
 
 
     def _parse_slp_res(self, slp_res):
@@ -69,7 +70,6 @@ class SLPResponse(StatusResponse):
 
         slp_res["motd"] = self._parse_motd(slp_res["motd"])
         slp_res["version"]["name"] = self._remove_color_codes(slp_res["version"]["name"])
-        slp_res["updated"] = str(datetime.datetime.now())
         slp_res["status"] = "online"
         return slp_res
 
