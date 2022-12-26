@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcclient"
-version = "0.7.8"
+version = "0.7.9"
 authors = [
   { name="Sch8ill", email="author@example.com" },
 ]
@@ -19,5 +19,5 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+"Bug Tracker" = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
