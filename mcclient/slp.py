@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-
-__author__ = "Sch8ill"
-
 
 import json
 from mcclient.base_client import BaseClient
