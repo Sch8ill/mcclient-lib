@@ -24,6 +24,7 @@ class StatusResponse:
 
         self.res["host"] = self.host
         self.res["port"] = port
+        self.timestamp = str(datetime.datetime.now())
 
 
     @staticmethod
@@ -41,9 +42,9 @@ class SLPResponse(StatusResponse):
 
         self.res = self._parse_slp_res(self.raw_res)
         self.motd = self.res["motd"]
+        self.favicon = self.res["favicon"]
         self.version = Version(self.res["version"]["name"], self.res["version"]["protocol"])
         self.players = Players(self.res["players"]["online"], self.res["players"]["max"], self.res["players"]["list"])
-        self.timestamp = str(datetime.datetime.now())
 
 
     def _parse_slp_res(self, slp_res):
@@ -61,10 +62,13 @@ class SLPResponse(StatusResponse):
             slp_res["motd"] = ""
 
         for player in slp_res["players"]["list"]:
-            player["last_seen"] = str(datetime.datetime.now())
+            player["last_seen"] = self.timestamp
 
         if "favicon" in slp_res:
-            slp_res.pop("favicon")
+            slp_res["favicon"] = True
+
+        else:
+            slp_res["favicon"] = False
 
         slp_res["motd"] = self._parse_motd(slp_res["motd"])
         slp_res["version"]["name"] = self._remove_color_codes(slp_res["version"]["name"])
