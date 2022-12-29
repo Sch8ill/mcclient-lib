@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcclient"
-version = "0.7.13"
+version = "0.7.19"
 authors = [
   {name="Sch8ill", email="author@example.com"},
 ]
