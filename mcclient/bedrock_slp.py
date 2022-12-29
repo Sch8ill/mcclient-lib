@@ -11,7 +11,7 @@ class BedrockSLPClient:
         self.timeout = timeout
 
 
-    def get_stats(self):
+    def get_status(self):
         res = self._request_status()
         res = self._parse_res(res)
         return BedrockResponse(self.host, self.port, res)
