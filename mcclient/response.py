@@ -114,7 +114,7 @@ class SLPResponse(StatusResponse):
 
 
 
-class SLPLegacyResponse(StatusResponse):
+class LegacySLPResponse(StatusResponse):
     def __init__(self, host, port, raw_res):
         super().__init__(host, port, raw_res)
 
