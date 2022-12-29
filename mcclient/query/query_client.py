@@ -50,16 +50,12 @@ class QueryClient:
         self._send(packet)
         res = self._recv()
         res = self._read_query(res)
-        res = QueryResponse(self.host, self.port, res)
         return res
 
 
-    def get_stats(self):
-        try:
-            return self._query_request()
-
-        except Exception as e:
-            return e
+    def get_status(self):
+        res = self._query_request()
+        return QueryResponse(self.host, self.port, res)
 
 
     @staticmethod
