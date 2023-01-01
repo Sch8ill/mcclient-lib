@@ -40,7 +40,7 @@ class SLPResponse(StatusResponse):
     def __init__(self, host, port, raw_res):
         super().__init__(host, port, raw_res)
 
-        self.res = self._parse_slp_res(self.raw_res)
+        self.res = self._parse_slp_res(self.raw_res | self.res)
         self.motd = self.res["motd"]
         self.favicon = self.res["favicon"]
         self.version = Version(self.res["version"]["name"], self.res["version"]["protocol"])
@@ -124,9 +124,8 @@ class LegacySLPResponse(StatusResponse):
         self.players = Players(self.res["online"], self.res["max"], None)
 
 
-    @staticmethod
-    def _parse_res(raw_res):
-        res = {}
+    def _parse_res(self, raw_res):
+        res = self.res
         res["version"] = raw_res[2]
         res["motd"] = raw_res[3]
         res["online"] = raw_res[4]
@@ -139,7 +138,7 @@ class QueryResponse(StatusResponse):
     def __init__(self, host, port, raw_res):
         super().__init__(host, port, raw_res)
 
-        self.res = raw_res
+        self.res = raw_res | self.res
 
         self.motd = self.res["motd"]
         self.gametype = self.res["gametype"]
