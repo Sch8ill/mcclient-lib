@@ -3,8 +3,9 @@ mcclient/__pycache__/
 .config/
 venv/
 .git/
-.replit
-replit.nix
 *.egg-info/
 build/
 dist/
+.replit
+replit.nix
+test.py
