@@ -1,5 +1,6 @@
 
 from mcclient.address import Address
 
-addr = Address("mc.internetpolice.ga")
-print(addr.get_host())
+print(Address("mcraspi.com").get_host())
+print(Address("mc.internetpolice.ga").get_host())
+print(Address("23.23.23.23").get_host())

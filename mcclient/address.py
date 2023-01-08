@@ -4,21 +4,40 @@ import dns.resolver
 
 
 class Address:
-    def __init__(self, addr):
+    def __init__(self, addr, proto="tcp"):
         self.addr = addr
+        self.proto = proto
         self.is_ip = self._ip_check(self.addr)
 
 
     def get_host(self):
         if self.is_ip:
-            return self.addr
+            return self.addr, None
 
         else:
-            return self._resolve_a_record(self.addr)
+            return self._resolve_hostname(self.addr)
+
+
+    def _resolve_hostname(self, hostname):
+        host = self._resolve_a_record(hostname)
+        srv = False
+        try:
+            srv_record = self._mc_srv_lookup(hostname, self.proto)
+            srv = True
+
+        except Exception:
+            pass
+
+        if srv:
+            return host, srv_record[1]
+
+        else:
+            return host, None
+
 
     @staticmethod
-    def _mc_srv_lookup(hostname):
-        srv_prefix = "_minecraft._tcp."
+    def _mc_srv_lookup(hostname, proto):
+        srv_prefix = f"_minecraft._{proto}."
         srv_record = dns.resolver.resolve(srv_prefix + hostname, "SRV")[0]# only use the first srv record returned
         host = str(srv_record.target).rstrip(".")
         port = int(srv_record.port)

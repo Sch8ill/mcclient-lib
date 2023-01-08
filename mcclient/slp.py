@@ -42,7 +42,7 @@ class SLPClient(BaseClient):
         self._handshake() # handshake + set connection state
         res = self._status_request()
         self.retries = 0
-        return SLPResponse(self.host, self.port, res)
+        return SLPResponse(self.hostname, self.port, res)
 
 
 
@@ -60,5 +60,5 @@ class LegacySLPClient(BaseClient):
         res = raw_res[3:] # remove padding and other headers
         res = res.decode("UTF-16-be", errors="ignore")
         res = res.split("\x00")
-        res = LegacySLPResponse(self.host, self.port, res)
+        res = LegacySLPResponse(self.hostname, self.port, res)
         return res

@@ -1,8 +1,8 @@
 
 __author__ = "Sch8ill"
 
-import struct
 import socket
+from mcclient.address import Address
 from mcclient.encoding.packet import Packet
 from mcclient.encoding.varint import VarInt
 
@@ -10,13 +10,24 @@ from mcclient.encoding.varint import VarInt
 
 class BaseClient:
     def __init__(self, host="localhost", port=25565, timeout=5, version=47):
-        self.host = host
-        self.port = port
+        self.get_host(host, port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.varint = VarInt()
         self.connected = False
         self.sock.settimeout(timeout)
         self.protocoll_version = self.varint.pack(version)
+
+
+    def get_host(self, hostname, port):
+        addr = Address(hostname)
+        addr = addr.get_host()
+        self.hostname = hostname
+        self.host = addr[0]
+        if addr[1] == None:
+            self.port = port
+
+        else:
+            self.port = addr[1]
 
 
     def _connect(self):
@@ -68,7 +79,7 @@ class BaseClient:
         fields = (
             b"\x00", # packet id
             self.protocoll_version,
-            self.host,
+            self.hostname,
             25565,
             self.varint.pack(next_state)# next state 1 for status request
         )
