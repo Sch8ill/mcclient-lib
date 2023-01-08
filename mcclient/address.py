@@ -10,25 +10,26 @@ class Address:
         self.is_ip = self._ip_check(self.addr)
 
 
-    def get_host(self):
+    def get_host(self, srv=True):
         if self.is_ip:
             return self.addr, None
 
         else:
-            return self._resolve_hostname(self.addr)
+            return self._resolve_hostname(self.addr, srv)
 
 
-    def _resolve_hostname(self, hostname):
+    def _resolve_hostname(self, hostname, srv):
         host = self._resolve_a_record(hostname)
-        srv = False
-        try:
-            srv_record = self._mc_srv_lookup(hostname, self.proto)
-            srv = True
-            
-        except Exception:
-            pass
-
+        srv_record = None
         if srv:
+            try:
+                srv_record = self._mc_srv_lookup(hostname, self.proto)
+                srv = True
+                
+            except Exception:
+                pass
+
+        if srv_record != None:
             return host, srv_record[1]
 
         else:
