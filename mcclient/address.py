@@ -24,7 +24,7 @@ class Address:
         try:
             srv_record = self._mc_srv_lookup(hostname, self.proto)
             srv = True
-
+            
         except Exception:
             pass
 

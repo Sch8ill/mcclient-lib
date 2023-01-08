@@ -1,20 +1,32 @@
 
 import socket
 import struct
+from mcclient.address import Address
 from mcclient.response import BedrockResponse
 
 
 class BedrockSLPClient:
     def __init__(self, host, port=19132, timeout=4):
-        self.host = host
-        self.port = port
+        self.get_host(host, port)
         self.timeout = timeout
+
+
+    def get_host(self, hostname, port):
+        addr = Address(hostname, proto="udp")
+        addr = addr.get_host()
+        self.hostname = hostname
+        self.host = addr[0]
+        if addr[1] == None:
+            self.port = port
+
+        else:
+            self.port = addr[1]
 
 
     def get_status(self):
         res = self._request_status()
         res = self._parse_res(res)
-        return BedrockResponse(self.host, self.port, res)
+        return BedrockResponse(self.hostname, self.port, res)
 
     
     def _request_status(self):
