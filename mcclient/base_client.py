@@ -9,8 +9,8 @@ from mcclient.encoding.varint import VarInt
 
 
 class BaseClient:
-    def __init__(self, host="localhost", port=25565, timeout=5, version=47):
-        self.get_host(host, port)
+    def __init__(self, host="localhost", port=25565, timeout=5, version=47, srv=True):
+        self.get_host(host, port, srv=srv)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.varint = VarInt()
         self.connected = False
@@ -18,9 +18,9 @@ class BaseClient:
         self.protocoll_version = self.varint.pack(version)
 
 
-    def get_host(self, hostname, port):
+    def get_host(self, hostname, port, srv):
         addr = Address(hostname)
-        addr = addr.get_host()
+        addr = addr.get_host(srv)
         self.hostname = hostname
         self.host = addr[0]
         if addr[1] == None:
