@@ -1,5 +1,5 @@
 # MCClient
-A lightweight Minecraft client to query a Minecraft servers status.
+A lightweight Minecraft client to query the status of a Minecraft server.
 
 ### Supported Mincraft versions
 * Minecraft Java (1.7.* -> 1.19.*)
