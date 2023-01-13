@@ -1,4 +1,3 @@
-
 import time
 from mcclient.base_client import BaseClient
 from mcclient.encoding.packet import Packet
@@ -12,6 +11,7 @@ class MCClient(BaseClient):
     def connect(self):
         self._connect()
         self._handshake(next_state=2)
+
 
     def login(self, player):
         self._login_start(player)
