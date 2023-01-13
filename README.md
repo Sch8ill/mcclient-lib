@@ -39,7 +39,7 @@ print(res.motd)
 ```
 from mcclient import QueryClient
 
-query_client = QueryClient(mc.example.com)
+query_client = QueryClient(mc.example.com, port=12345)
 res = query_client.get_status()
 print(res.motd)
 ```
@@ -48,6 +48,6 @@ print(res.motd)
 ```
 from mcclient import BedrockSLPClient
 
-bedrock_slp_client = BedrockSLPClient(mc.example.com)
+bedrock_slp_client = BedrockSLPClient(mc.example.com, port=12345)
 res = bedrock_slp_client.get_status()
 print(res.motd)
