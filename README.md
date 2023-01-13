@@ -52,5 +52,19 @@ bedrock_slp_client = BedrockSLPClient(mc.example.com, port=12345)
 res = bedrock_slp_client.get_status()
 print(res.motd)
 
-## documentation
+## Queryable data
+* motd (all)
+* online player count (all)
+* max player count (all)
+* player list (basic ServerListPing and query slp)
+* server version (all)
+* server protocol version (Basic Serverlistping, query slp and Bedrock slp)
+* mods and plugins (basic ServerListPing on Forge and query slp)
+* has a favicon (basic ServerListPing)
+* name of map (query slp)
+* hostport and hostip (query slp)
+* gametype (query slp and Bedrock slp)
+* server id (Bedrock slp)
+
+## Documentation
 There is no real documentation, just look into the source.
