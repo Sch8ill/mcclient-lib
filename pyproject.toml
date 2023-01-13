@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "mcclient"
-version = "0.8.6"
+name = "mcclient-lib"
+version = "0.8.8"
 authors = [
-  {name="Sch8ill", email="author@example.com"},
+  {name="Sch8ill", email="noreply@noreply.com"},
 ]
 description = "A lightweight Minecraft client"
 readme = "README.md"
