@@ -9,3 +9,4 @@ dist/
 .replit
 replit.nix
 test.py
+client.py
