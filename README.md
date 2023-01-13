@@ -11,24 +11,15 @@ A lightweight Minecraft client to query the status of a Minecraft server.
 * Query Protocol (Full stat)
 * Bedrock ServerListPing
 
-## Installation 
-### local
-```
-git clone https://github.com/Sch8ill/MCClient
-```
-```
-pip install .
-```
+## Installation
 ### pypi
+```bash
+pip install mcclient-lib
 ```
-pip install mcclient
-```
-IMPORTANT: There is no pypi package yet.
-
 
 ## Usage
 ### Basic ServerListPing
-```
+```python
 from mcclient import SLPClient
 
 slp_client = SLPClient("mc.example.com", port=12345)
@@ -36,7 +27,7 @@ res = slp_client.get_status()
 print(res.motd)
  ```
 ### Query
-```
+```python
 from mcclient import QueryClient
 
 query_client = QueryClient(mc.example.com, port=12345)
@@ -45,7 +36,7 @@ print(res.motd)
 ```
 
 ### Bedrock ServerListPing
-```
+```python
 from mcclient import BedrockSLPClient
 
 bedrock_slp_client = BedrockSLPClient(mc.example.com, port=12345)
@@ -67,4 +58,4 @@ print(res.motd)
 * server id (Bedrock slp)
 
 ## Documentation
-There is no real documentation, just look into the source.
+There is no real documentation, just look into the [source](https://github.com/Sch8ill/MCClient-lib "github.com/Sch8ill/MCClient-lib").
