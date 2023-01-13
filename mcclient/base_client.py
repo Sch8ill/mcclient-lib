@@ -1,6 +1,3 @@
-
-__author__ = "Sch8ill"
-
 import socket
 from mcclient.address import Address
 from mcclient.encoding.packet import Packet
