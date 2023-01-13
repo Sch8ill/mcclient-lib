@@ -12,6 +12,7 @@ A lightweight Minecraft client to query a Minecraft servers status.
 * Bedrock ServerListPing
 
 ## Installation 
+### local
 ```
 git clone https://github.com/Sch8ill/MCClient
 ```
