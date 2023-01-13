@@ -51,3 +51,6 @@ from mcclient import BedrockSLPClient
 bedrock_slp_client = BedrockSLPClient(mc.example.com, port=12345)
 res = bedrock_slp_client.get_status()
 print(res.motd)
+
+## documentation
+There is no real documentation, just look into the source.
