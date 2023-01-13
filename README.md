@@ -19,10 +19,17 @@ git clone https://github.com/Sch8ill/MCClient
 ```
 pip install .
 ```
- ## Usage
- ### Basic ServerListPing
- ```
- from mcclient import SLPClient
+### pypi
+```
+pip install mcclient
+```
+IMPORTANT: There is no pypi package yet.
+
+
+## Usage
+### Basic ServerListPing
+```
+from mcclient import SLPClient
 
 slp_client = SLPClient("mc.example.com", port=12345)
 res = slp_client.get_status()
