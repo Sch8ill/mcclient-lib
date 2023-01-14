@@ -1,6 +1,9 @@
 # MCClient
 A lightweight Minecraft client to query the status of a Minecraft server.
 
+### Supported Mincraft versions# MCClient
+A lightweight Minecraft client to query the status of a Minecraft server.
+
 ### Supported Mincraft versions
 * Minecraft Java (1.4.* -> 1.19.*)
 * Minecraft Bedrock
@@ -26,7 +29,6 @@ from mcclient import SLPClient
 # for Minecraft Java servers from 1.7.*
 slp_client = SLPClient("mc.example.com", port=12345)
 res = slp_client.get_status()
-print(res.motd)
  ```
 ### Query
 ```python
@@ -35,7 +37,6 @@ from mcclient import QueryClient
 # for Minecraft Java servers (needs to be enabled on the server)
 query_client = QueryClient(mc.example.com, port=12345)
 res = query_client.get_status()
-print(res.motd)
 ```
 
 ### Bedrock ServerListPing
@@ -45,8 +46,36 @@ from mcclient import BedrockSLPClient
 # for Minecraft Bedrock servers
 bedrock_slp_client = BedrockSLPClient(mc.example.com, port=12345)
 res = bedrock_slp_client.get_status()
-print(res.motd)
 ```
+
+### Response
+How to handle the returned response object
+```
+motd = res.motd
+
+online_players = res.players.online
+max_players = res.players.max
+player_list = res.players.list
+
+version = res.version.name
+protocol_version = res.version.protocol
+
+# only for query responses
+plugins = res.plugins
+
+# only for basic ServerListPing
+has_favicon = res.favicon
+
+# only for query and Bedrock
+gametype = res.gametype
+
+# only for query and bedrock
+map = res.map
+
+# only for bedrock
+server_id = res.server_id
+```
+
 ## Queryable data
 * motd
 * online player count
