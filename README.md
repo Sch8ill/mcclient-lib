@@ -1,5 +1,6 @@
 # MCClient
 [![Downloads](https://static.pepy.tech/badge/mcclient-lib)](https://pepy.tech/project/mcclient-lib)
+
 A lightweight Minecraft client to query the status of a Minecraft server.
 
 ### Supported Mincraft versions
