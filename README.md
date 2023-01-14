@@ -1,7 +1,5 @@
 # MCClient
-A lightweight Minecraft client to query the status of a Minecraft server.
-
-### Supported Mincraft versions# MCClient
+[![Downloads](https://static.pepy.tech/badge/mcclient-lib)](https://pepy.tech/project/mcclient-lib)
 A lightweight Minecraft client to query the status of a Minecraft server.
 
 ### Supported Mincraft versions
@@ -9,10 +7,10 @@ A lightweight Minecraft client to query the status of a Minecraft server.
 * Minecraft Bedrock
 
 ### Supported protocols
-* [Basic ServerListPing](https://wiki.vg/Server_List_Ping "wiki.vg/Server_List_Ping")
-* [Legacy ServerListPing](https://wiki.vg/Server_List_Ping#1.4_to_1.5 "wiki.vg/Server_List_Ping#1.4_to_1.5")
-* [Query Protocol (Full stat)](https://wiki.vg/Query "wiki.vg/Query")
-* [Bedrock ServerListPing](https://wiki.vg/Raknet_Protocol#Unconnected_Ping "wiki.vg/Raknet_Protocol#Unconnected_Ping")
+* [ServerListPing](https://wiki.vg/Server_List_Ping "wiki.vg/Server_List_Ping") for Minecraft java servers
+* [Legacy ServerListPing](https://wiki.vg/Server_List_Ping#1.4_to_1.5 "wiki.vg/Server_List_Ping#1.4_to_1.5") for Minecraft java servers before 1.4
+* [Query Protocol](https://wiki.vg/Query "wiki.vg/Query") for Minecraft java servers (this needs to be enabled on the server)
+* [Bedrock ServerListPing](https://wiki.vg/Raknet_Protocol#Unconnected_Ping "wiki.vg/Raknet_Protocol#Unconnected_Ping") for Bedrock servers
 
 ## Installation
 ### pypi
@@ -22,7 +20,7 @@ pip install mcclient-lib
 The pypi package might not always be up to date.
 
 ## Usage
-### Basic ServerListPing
+### ServerListPing
 ```python
 from mcclient import SLPClient
 
@@ -89,6 +87,7 @@ server_id = res.server_id
 * hostport and hostip
 * gametype
 * server id
+Note: not every field is queryable with every protocol
 
 ## Documentation
 There is some documentation [here](https://github.com/Sch8ill/MCClient-lib/blob/master/docs.md "/docs.md"), if that isn't enough just look into the [source](https://github.com/Sch8ill/MCClient-lib "github.com/Sch8ill/MCClient-lib").
