@@ -13,4 +13,4 @@
 | has favicon             | yes       | no         | no    | no          | res.favicon          |
 | gametype                | no        | no         | yes   | depends     | res.gametype         |
 | name of map             | no        | no         | yes   | depends     | res.map              |
-| name of map             | no        | no         | no    | yes         | res.server_id        |
+| server id               | no        | no         | no    | yes         | res.server_id        |
