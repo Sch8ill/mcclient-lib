@@ -159,10 +159,11 @@ class BedrockResponse(StatusResponse):
         super().__init__(host, port, raw_res)
 
         self.res = {}
-        self.res["brand"] = self.raw_res[0]
+        self.res["version"] = {}
+        self.res["version"]["brand"] = self.raw_res[0]
+        self.res["version"]["protocol"] = int(self.raw_res[2])
+        self.res["version"]["name"] = self.raw_res[3]
         self.res["motd"] = self.raw_res[1]
-        self.res["protocol"] = int(self.raw_res[2])
-        self.res["version"] = self.raw_res[3]
         self.res["online_players"] = int(self.raw_res[4])
         self.res["max_players"] = int(self.raw_res[5])
         self.res["server_id"] = self.raw_res[6]
@@ -175,9 +176,9 @@ class BedrockResponse(StatusResponse):
         if len(self.raw_res) > 7:
             self.res["gametype"] = self.raw_res[8]
 
-        self.brand = self.res["brand"]
+        self.version = Version(self.res["version"]["name"], self.res["version"]["protocol"])
+        self.version.brand = self.res["version"]["brand"]
         self.motd = self.res["motd"]
-        self.protocol = self.res["protocol"]
         self.version = self.res["version"]
         self.online_players = self.res["online_players"]
         self.max_players = self.res["max_players"]
