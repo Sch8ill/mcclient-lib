@@ -50,7 +50,7 @@ res = bedrock_slp_client.get_status()
 
 ### Response
 How to handle the returned response object
-```
+```python
 motd = res.motd
 
 online_players = res.players.online
