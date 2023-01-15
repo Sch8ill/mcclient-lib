@@ -1,5 +1,6 @@
 # MCClient
 [![Downloads](https://static.pepy.tech/badge/mcclient-lib)](https://pepy.tech/project/mcclient-lib)
+[![PyPI](https://img.shields.io/pypi/v/mcclient-lib?color=green&label=PyPI%20package)](https://pypi.org/project/mcclient-lib/)
 
 A lightweight Minecraft client to query the status of a Minecraft server.
 
@@ -88,6 +89,7 @@ server_id = res.server_id
 * hostport and hostip
 * gametype
 * server id
+
 Note: not every field is queryable with every protocol
 
 ## Documentation
