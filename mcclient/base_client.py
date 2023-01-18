@@ -1,8 +1,8 @@
 import socket
+
 from mcclient.address import Address
 from mcclient.encoding.packet import Packet
 from mcclient.encoding.varint import VarInt
-
 
 
 class BaseClient:
@@ -41,7 +41,7 @@ class BaseClient:
     def _send(self, packet):
         return self.sock.send(packet)
 
-    
+
     def _recv(self):
         length = self.varint.unpack(self.sock)
         packet_id = self.varint.unpack(self.sock)
@@ -70,6 +70,11 @@ class BaseClient:
 
     def _flush(self, length=8192):
         self.sock.recv(length)
+
+
+    def implant_socket(self, sock):
+        self.sock = sock
+        self.connected = True
 
 
     def _handshake(self, next_state=1):
