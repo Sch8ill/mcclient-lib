@@ -29,9 +29,4 @@ class Packet:
 
         elif type(data) == bool:
             data = b"\x01" if data else b"\x00"
-
-        elif type(data) == float:
-            print(data)
-            data = struct.pack(">Q", int(data))
-            print(data)
         return data
