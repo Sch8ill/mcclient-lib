@@ -14,6 +14,7 @@ class SLPClient(BaseClient):
     def _status_request(self):
         packet = Packet([b"\x00"]) # send status request
         packet = packet.pack()
+        print(packet)
         self._send(packet)
         res = self._recv()
 
