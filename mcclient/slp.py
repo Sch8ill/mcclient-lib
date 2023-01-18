@@ -1,10 +1,8 @@
 import json
-from mcclient.base_client import BaseClient
-from mcclient.response import SLPResponse
-from mcclient.response import LegacySLPResponse
-from mcclient.encoding.varint import VarInt
-from mcclient.encoding.packet import Packet
 
+from mcclient.response import SLPResponse, LegacySLPResponse
+from mcclient.base_client import BaseClient
+from mcclient.encoding.packet import Packet
 
 
 class SLPClient(BaseClient):

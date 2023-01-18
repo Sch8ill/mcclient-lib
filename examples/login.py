@@ -1,4 +1,6 @@
+# sample login script for offline/cracked servers
 import time
+
 from mcclient.base_client import BaseClient
 from mcclient.encoding.packet import Packet
 

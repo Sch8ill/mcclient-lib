@@ -1,7 +1,6 @@
 import dns.resolver
 
 
-
 class Address:
     def __init__(self, addr, proto="tcp"):
         self.addr = addr
