@@ -1,4 +1,4 @@
-# sample script
+# sample script to get a servers status using SLP
 from mcclient import SLPClient
 
 client = SLPClient("mc.lpmitkev.de") # sample server
