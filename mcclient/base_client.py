@@ -9,9 +9,9 @@ class BaseClient:
     def __init__(self, host="localhost", port=25565, timeout=5, version=47, srv=True):
         self.get_host(host, port, srv=srv)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket.setsocketimeout(timeout)
         self.varint = VarInt()
         self.connected = False
-        self.sock.settimeout(timeout)
         self.protocoll_version = self.varint.pack(version)
 
 
