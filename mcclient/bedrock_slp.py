@@ -1,5 +1,6 @@
 import socket
 import struct
+
 from mcclient.address import Address
 from mcclient.response import BedrockResponse
 
@@ -27,7 +28,7 @@ class BedrockSLPClient:
         res = self._parse_res(res)
         return BedrockResponse(self.hostname, self.port, res)
 
-    
+
     def _request_status(self): # needs an update (https://wiki.vg/Raknet_Protocol#Unconnected_Ping)
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(self.timeout)

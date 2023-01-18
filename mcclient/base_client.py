@@ -1,17 +1,17 @@
 import socket
+
 from mcclient.address import Address
 from mcclient.encoding.packet import Packet
 from mcclient.encoding.varint import VarInt
-
 
 
 class BaseClient:
     def __init__(self, host="localhost", port=25565, timeout=5, version=47, srv=True):
         self.get_host(host, port, srv=srv)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket.setsocketimeout(timeout)
         self.varint = VarInt()
         self.connected = False
-        self.sock.settimeout(timeout)
         self.protocoll_version = self.varint.pack(version)
 
 
@@ -41,7 +41,7 @@ class BaseClient:
     def _send(self, packet):
         return self.sock.send(packet)
 
-    
+
     def _recv(self):
         length = self.varint.unpack(self.sock)
         packet_id = self.varint.unpack(self.sock)
@@ -70,6 +70,11 @@ class BaseClient:
 
     def _flush(self, length=8192):
         self.sock.recv(length)
+
+
+    def implant_socket(self, sock):
+        self.sock = sock
+        self.connected = True
 
 
     def _handshake(self, next_state=1):

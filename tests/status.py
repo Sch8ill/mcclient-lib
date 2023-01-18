@@ -1,8 +1,7 @@
-from mcclient import QueryClient
 from mcclient import SLPClient
+from mcclient import QueryClient
 from mcclient import LegacySLPClient
 from mcclient import BedrockSLPClient
-
 
 
 slp_client = SLPClient(host="mc.lpmitkev.de") # random server, SRV record test

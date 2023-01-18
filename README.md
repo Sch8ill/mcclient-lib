@@ -19,7 +19,7 @@ A lightweight Minecraft client to query the status of a Minecraft server.
 ```bash
 pip install mcclient-lib
 ```
-The pypi package might not always be up to date.
+Note: The pypi package isn't always up to date. If you want to use the latest version you will have to clone this repository and then install the package locally.
 
 ## Usage
 ### ServerListPing
@@ -92,5 +92,6 @@ server_id = res.server_id
 
 Note: not every field is queryable with every protocol
 
+
 ## Documentation
-There is some documentation [here](https://github.com/Sch8ill/MCClient-lib/blob/master/docs.md "/docs.md"), if that isn't enough just look into the [source](https://github.com/Sch8ill/MCClient-lib "github.com/Sch8ill/MCClient-lib").
+You can find more documentation [here](https://github.com/Sch8ill/MCClient-lib/blob/master/docs.md "/docs.md"), if that isn't enough just look into the [source](https://github.com/Sch8ill/MCClient-lib "github.com/Sch8ill/MCClient-lib").

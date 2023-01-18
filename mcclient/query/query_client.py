@@ -1,8 +1,10 @@
 import socket
 import struct
 import random
+
 from mcclient.response import QueryResponse
 from mcclient.query.packet import QueryPacket
+
 
 class QueryClient:
     def __init__(self, host="localhost", port=25565, timeout=0.5):
