@@ -6,15 +6,14 @@ from mcclient.encoding.packet import Packet
 
 
 class SLPClient(BaseClient):
-    def __init__(self, host="localhost", port=25565, timeout=5, srv=True):
-        super().__init__(host=host, port=port, timeout=timeout, srv=srv)
+    def __init__(self, host="localhost", port=25565, timeout=5, proto=47, srv=True):
+        super().__init__(host=host, port=port, timeout=timeout, proto=proto, srv=srv)
         self.retries = 0
 
 
     def _status_request(self):
         packet = Packet([b"\x00"]) # send status request
         packet = packet.pack()
-        print(packet)
         self._send(packet)
         res = self._recv()
 
