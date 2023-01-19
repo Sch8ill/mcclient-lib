@@ -1,12 +1,8 @@
 __pycache__/
-mcclient/__pycache__/
 .config/
 venv/
 .git/
 *.egg-info/
 build/
 dist/
-.replit
-replit.nix
-test.py
-client.py
+.coverage
