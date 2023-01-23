@@ -1,6 +1,6 @@
 import json
 
-from mcclient import SLPClient
+from mcclient import SLPClient, LegacySLPClient
 from mcclient.encoding.varint import VarInt
 from mcclient.encoding.packet import Packet
 
@@ -29,15 +29,44 @@ BASE_RES = {
     }
 
 
-class SLPTestSocket:
+class TooManyPackets(Exception):
+    def __init__(self, max_packets):
+        message = f"Received too man packets (more than {max_packets})"
+        super().__init__(message)
+
+
+class BaseTestConn:
     varint = VarInt()
 
+    def __init__(self):
+        self.packets = 0
+        self._buffer = b""
+
+
+    def recv(self, length):
+        data = self._buffer[:length]
+        self._buffer = self._buffer[length:]
+        return data
+
+
+    def close(self):
+        pass
+
+
+    def respond(self, data):
+        self._buffer += data
+
+
+
+class SLPTestConn(BaseTestConn):
+    max_packets = 2
+
     def __init__(self, hostname, base_res, proto):
+        super().__init__()
         self.hostname = hostname
         self.base_res = base_res
         self.proto = proto
-        self.buffer = b""
-        self.packets = 0
+
 
     def send(self, data):
         if self.packets == 0:
@@ -55,33 +84,60 @@ class SLPTestSocket:
         elif self.packets == 1:
             self.packets += 1
             assert data == b"\x01\x00"
-            self.respond()
+            self.respond_res()
 
-        elif self.packets > 2:
-            raise Exception("Received too many packet (more than 2)")
-
-
-    def recv(self, length):
-        data = self.buffer[:length]
-        self.buffer = self.buffer[length:]
-        return data
+        elif self.packets >= self.max_packets:
+            raise TooManyPackets(self.max_packets)
 
 
-    def close(self):
-        pass
-
-
-    def respond(self):
+    def respond_res(self):
         res_fields = (
             b"\x00",
             json.dumps(self.base_res)
         )
         packet = Packet(res_fields).pack()
-        self.buffer += packet
+        self.respond(packet)
 
 
-def test_slp():
-    test_sock = SLPTestSocket(TEST_HOSTNAME, BASE_RES, TEST_PROTO)
+
+def test_slp_request():
+    test_conn = SLPTestConn(TEST_HOSTNAME, BASE_RES, TEST_PROTO)
     slp_client = SLPClient(TEST_HOSTNAME, proto=TEST_PROTO)
-    slp_client.implant_socket(test_sock)
-    res = slp_client.get_status()
+    slp_client.implant_socket(test_conn)
+    slp_client.get_status()
+
+
+
+class LegaySLPTestConn(BaseTestConn):
+    max_packets = 1
+
+    def __init__(self, base_res):
+        super().__init__()
+        self.base_res = base_res
+
+
+    def send(self, data):
+        if self.packets == 0:
+            self.packets += 1
+            assert data == b"\xFE\x01"
+
+            test_res = b"""\xFF\x00\x25\x00\xA7\x00\x31\x00\x00\x00
+                \x31\x00\x32\x00\x37\x00\x00\x00\x31\x00\x2E\x00\x31
+                \x00\x39\x00\x2E\x00\x33\x00\x00\x00\x41\x00\x20\x00
+                \x4D\x00\x69\x00\x6E\x00\x65\x00\x63\x00\x72\x00\x61
+                \x00\x66\x00\x74\x00\x20\x00\x53\x00\x65\x00\x72\x00
+                \x76\x00\x65\x00\x72\x00\x00\x00\x30\x00\x00\x00\x32
+                \x00\x30"""
+            # test packet dump from raw leagy slp response, SHOULD be changed in the future!!
+            self.respond(test_res)
+
+        elif self.packets >= self.max_packets:
+            raise TooManyPackets(self.max_packets)
+
+
+
+def test_legacy_slp_request():
+    test_conn = LegaySLPTestConn(BASE_RES)
+    legacy_slp_client = LegacySLPClient(TEST_HOSTNAME)
+    legacy_slp_client.implant_socket(test_conn)
+    legacy_slp_client.get_status()
