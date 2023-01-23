@@ -32,7 +32,7 @@ class QueryClient:
 
 
     def _recv(self):
-        res = self.sock.recv(4096)
+        res = self.sock.recv(8192)
         type = res[0]
         session_id = res[1:5]
         payload = res[5:]
@@ -41,17 +41,16 @@ class QueryClient:
 
     def _query_request(self):
         self._handshake()
-        payload = self.token + b"\x00\x00\x00\x00" # challenge token and some padding for full status request
+        payload = self.token + b"\x00\x00\x00\x00" # challenge token and some padding for a full status request
         packet = QueryPacket(
-            0, # packettype 0 for status request
+            0, # packettype 0 for a status request
             self.session_id,
             payload
         )
         packet = packet.pack()
         self._send(packet)
-        res = self._recv()
-        res = self._read_query(res)
-        return res
+        raw_res = self._recv()
+        return self._read_query(raw_res)
 
 
     def get_status(self):
