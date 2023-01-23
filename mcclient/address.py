@@ -37,7 +37,7 @@ class Address:
     @staticmethod
     def _mc_srv_lookup(hostname, proto):
         srv_prefix = f"_minecraft._{proto}."
-        srv_record = dns.resolver.resolve(srv_prefix + hostname, "SRV")[0]# only use the first srv record returned
+        srv_record = dns.resolver.resolve(srv_prefix + hostname, "SRV")[0] # only use the first srv record returned
         host = str(srv_record.target).rstrip(".")
         port = int(srv_record.port)
         return host, port
