@@ -1,7 +1,6 @@
 from mcclient import QueryClient
-from mcclient.query.packet import QueryPacket
 
-from tests.test_slp import BaseTestConn, TooManyPackets
+from tests.utils import BaseTestConn, TooManyPackets
 
 
 class QueryTestConn(BaseTestConn):
@@ -33,7 +32,7 @@ class QueryTestConn(BaseTestConn):
                 self.respond(stat_res)
 
             elif len(data) == 11:
-                raise NotImplemented("Basic stat is not implemented yet.")
+                raise NotImplementedError("Basic stat is not implemented yet.")
 
         elif self.packets >= self.max_packets:
             TooManyPackets(self.max_packets)
