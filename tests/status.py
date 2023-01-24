@@ -5,11 +5,11 @@ from mcclient import BedrockSLPClient
 
 # real world test, just temporary
 
-slp_client = SLPClient(host="mc.lpmitkev.de") # random server, SRV record test
+slp_client = SLPClient("mc.lpmitkev.de") # random server, SRV record test
 
-legacy_slp_client = LegacySLPClient(host="mc.lpmitkev.de") # SRV record test
+legacy_slp_client = LegacySLPClient("mc.lpmitkev.de") # SRV record test
 
-query_client = QueryClient(host="mc.lpmitkev.de")
+query_client = QueryClient("mc.lpmitkev.de")
 
 bedrock_client = BedrockSLPClient("geo.hivebedrock.network")
 

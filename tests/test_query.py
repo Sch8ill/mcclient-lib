@@ -41,7 +41,7 @@ class QueryTestConn(BaseTestConn):
 
 def test_query_request():
     test_conn = QueryTestConn()
-    query_client = QueryClient(host="example.com")
+    query_client = QueryClient("example.com")
     query_client.sock = test_conn # implant test socket
     query_client.get_status()
     # Todo: add checks for response

@@ -7,7 +7,7 @@ from mcclient.query.packet import QueryPacket
 
 
 class QueryClient:
-    def __init__(self, host="localhost", port=25565, timeout=0.5):
+    def __init__(self, host, port=25565, timeout=0.5):
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

@@ -35,7 +35,7 @@ res = slp_client.get_status()
 from mcclient import QueryClient
 
 # for Minecraft Java servers (needs to be enabled on the server)
-query_client = QueryClient(mc.example.com, port=12345)
+query_client = QueryClient("mc.example.com", port=12345)
 res = query_client.get_status()
 ```
 
@@ -44,7 +44,7 @@ res = query_client.get_status()
 from mcclient import BedrockSLPClient
 
 # for Minecraft Bedrock servers
-bedrock_slp_client = BedrockSLPClient(mc.example.com, port=12345)
+bedrock_slp_client = BedrockSLPClient("mc.example.com", port=12345)
 res = bedrock_slp_client.get_status()
 ```
 

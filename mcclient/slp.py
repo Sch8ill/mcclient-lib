@@ -6,7 +6,7 @@ from mcclient.encoding.packet import Packet
 
 
 class SLPClient(BaseClient):
-    def __init__(self, host="localhost", port=25565, timeout=5, proto=47, srv=True):
+    def __init__(self, host, port=25565, timeout=5, proto=47, srv=True):
         super().__init__(host=host, port=port, timeout=timeout, proto=proto, srv=srv)
         self.retries = 0
 
@@ -44,7 +44,7 @@ class SLPClient(BaseClient):
 
 
 class LegacySLPClient(BaseClient):
-    def __init__(self, host="localhost", port=25565, timeout=5):
+    def __init__(self, host, port=25565, timeout=5):
         super().__init__(host=host, port=port, timeout=timeout)
 
 
