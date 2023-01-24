@@ -8,7 +8,8 @@ from mcclient.response import BedrockResponse
 class BedrockSLPClient:
     def __init__(self, host, port=19132, timeout=4):
         self.get_host(host, port)
-        self.timeout = timeout
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.settimeout(timeout)
 
 
     def get_host(self, hostname, port):
@@ -30,13 +31,9 @@ class BedrockSLPClient:
 
 
     def _request_status(self): # needs an update (https://wiki.vg/Raknet_Protocol#Unconnected_Ping)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(self.timeout)
-
         status_request = b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\xfe\xfe\xfe\xfe\xfd\xfd\xfd\xfd\x124Vx"
-        sock.sendto(status_request, (self.host, self.port))
-        data, _ = sock.recvfrom(4096)
-        return data
+        self.sock.sendto(status_request, (self.host, self.port))
+        return self.sock.recv(4096)
 
 
     @staticmethod
