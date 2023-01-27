@@ -51,6 +51,10 @@ res = bedrock_slp_client.get_status()
 ### Response
 How to handle the returned response object
 ```python
+# The server address and port
+host = res.host
+port = host.port
+
 motd = res.motd
 
 online_players = res.players.online
@@ -74,6 +78,13 @@ map = res.map
 
 # only for bedrock
 server_id = res.server_id
+
+# timestamp of the request
+timestamp = res.timestamp
+
+# the reponse as a dictonary with some further infomation
+# the keys are named like the values in the response object
+res_dict = res.res
 ```
 
 ## Queryable data

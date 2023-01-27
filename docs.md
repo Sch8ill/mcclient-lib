@@ -15,6 +15,8 @@
 | name of map             | no      | no         | yes   | depends     | res.map                  |
 | server id               | no      | no         | no    | yes         | res.server_id            |
 | host port and ip        | no      | no         | yes   | no          | res.hostport, res.hostip |
+| timestamp               | yes     | yes        | yes   | yes         | res.timstamp             |
+| response as dictonary   | yes     | yes        | yes   | yes         | res.res                  |
 
 
 ## Base client
