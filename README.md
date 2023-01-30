@@ -26,7 +26,7 @@ Note: The pypi package isn't always up to date. If you want to use the latest ve
 ```python
 from mcclient import SLPClient
 
-# for Minecraft Java servers from 1.7.*
+# for Minecraft Java servers from 1.7.* and higher
 slp_client = SLPClient("mc.example.com", port=12345)
 res = slp_client.get_status()
  ```
