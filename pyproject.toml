@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcclient-lib"
-version = "0.8.13"
+version = "0.8.14"
 authors = [
   {name="Sch8ill", email="noreply@noreply.com"},
 ]
@@ -13,7 +13,7 @@ description = "A lightweight Minecraft client to query the status of a Minecraft
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
-  "dnspython < 2.2.1",
+  "dnspython<2.4.0,>=2.2.1",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

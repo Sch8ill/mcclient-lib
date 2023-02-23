@@ -1,3 +1,5 @@
+import ipaddress
+
 import dns.resolver
 
 
@@ -23,7 +25,7 @@ class Address:
             try:
                 srv_record = self._mc_srv_lookup(hostname, self.proto)
                 srv = True
-                
+
             except Exception:
                 pass
 
@@ -51,18 +53,8 @@ class Address:
 
     @staticmethod
     def _ip_check(addr):
-        is_ip = True
-        if addr.count(".") == 3:
-            for octet in addr.split("."):
-                try:
-                    octet = int(octet)
-                    if not octet <= 255 and octet >= 0:
-                        is_ip = False
-                        break
-
-                except ValueError:
-                    is_ip = False
-
-        else:
-            is_ip = False
-        return is_ip
+        try:
+            ipaddress.ip_address(addr)
+            return True
+        except ValueError:
+            return False
