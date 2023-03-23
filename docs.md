@@ -30,15 +30,13 @@ Here is an example:
 ```python
 from mcclient import SLPClient
 
-def mc_check(ip, port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def mc_check(sock, ip, port):
     try:
-        sock.connect((ip, port)) # The socket thats going to be implanted has to be connected
-        slp_client = SLPClient(host=ip, port=port)
-        slp_client.implant_socket(sock)
-        res = slp_client.get_status()
+        slp_client = SLPClient(host=ip, port=port) # initiate the client
+        slp_client.implant_socket(sock) # implant the already connected socket
+        res = slp_client.get_status() # retreive the status data
 
-    except Except as e:
+    except Exception as e:
         ...
 ```
 
