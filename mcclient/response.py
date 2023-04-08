@@ -1,4 +1,4 @@
-import datetime
+import datetime, re
 
 
 class Players:
@@ -27,12 +27,25 @@ class StatusResponse:
 
 
     @staticmethod
-    def _remove_color_codes(cstr):
-        color_codes = ["a", "b", "c", "d", "e", "f", "k", "l", "m", "n", "o", "r", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        for code in color_codes:
-            cstr = cstr.replace("§" + code, "")
-        return cstr
-
+    def _remove_color_codes(cstr: str, flavor: str = "java") -> str:
+        """
+        Returns the input string stripped of all Minecraft color/formatting codes.
+        
+        Args:
+        cstr (str): The string to remove color codes from.
+        flavor (str): The flavor of Minecraft formatting codes to remove. Defaults to 'java'.
+            'java' removes codes for Java Edition. 
+            'bedrock' removes codes for Bedrock Edition.
+            If any other value is passed, codes for both editions will be removed.
+        
+        Returns:
+        str: The input string stripped of all Minecraft color/formatting codes.
+        """
+        if flavor == "bedrock":
+          return re.sub(r"§[a-gklor0-9]","", cstr)
+        elif flavor == "java":
+          return re.sub(r"§[a-fk-or0-9]","", cstr) 
+        return re.sub(r"§[a-gk-or0-9]","", cstr)
 
 
 class SLPResponse(StatusResponse):
