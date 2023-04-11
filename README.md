@@ -2,6 +2,8 @@
 
 [![Downloads](https://static.pepy.tech/badge/mcclient-lib)](https://pepy.tech/project/mcclient-lib)
 [![PyPI](https://img.shields.io/pypi/v/mcclient-lib?color=green&label=PyPI%20package)](https://pypi.org/project/mcclient-lib/)
+[![CodeQL](https://cdn.djstomp.net/img/codeql.svg)](https://github.com/Sch8ill/MCClient-lib/actions/workflows/codeql.yml)
+![](https://cdn.djstomp.net/img/safety.svg)
 
 A lightweight Minecraft client for querying the status data of a Minecraft server.
 
