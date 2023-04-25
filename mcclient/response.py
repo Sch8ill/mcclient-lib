@@ -1,4 +1,5 @@
 import datetime
+import re
 
 
 class Players:
@@ -22,17 +23,28 @@ class StatusResponse:
         self.res = {}
 
         self.res["host"] = self.host
-        self.res["port"] = port
+        self.res["port"] = self.port
         self.timestamp = str(datetime.datetime.now())
 
 
     @staticmethod
-    def _remove_color_codes(cstr):
-        color_codes = ["a", "b", "c", "d", "e", "f", "k", "l", "m", "n", "o", "r", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        for code in color_codes:
-            cstr = cstr.replace("§" + code, "")
-        return cstr
+    def _remove_color_codes(cstr: str, bedrock: bool = False) -> str:
+        """
+        Returns the input string stripped of all Minecraft color/formatting codes.
+        documentation on minecraft color/formatting codes:
+        https://minecraft.fandom.com/wiki/Formatting_codes
 
+        Args:
+        cstr (str): The string to remove color codes from.
+        bedrock (bool): Wether to method should remove bedrock color/formating codes.
+
+        Returns:
+        str: The input string stripped of all Minecraft color/formatting codes.
+        """
+
+        if bedrock:
+            return re.sub(r"§[a-u0-9]", "", cstr)
+        return re.sub(r"§[a-fk-or0-9]", "", cstr)
 
 
 class SLPResponse(StatusResponse):
@@ -42,9 +54,10 @@ class SLPResponse(StatusResponse):
         self.res = self.res | self._parse_slp_res(self.raw_res)
         self.motd = self.res["motd"]
         self.favicon = self.res["favicon"]
-        self.version = Version(self.res["version"]["name"], self.res["version"]["protocol"])
-        self.players = Players(self.res["players"]["online"], self.res["players"]["max"], self.res["players"]["list"])
-
+        self.version = Version(
+            self.res["version"]["name"], self.res["version"]["protocol"])
+        self.players = Players(
+            self.res["players"]["online"], self.res["players"]["max"], self.res["players"]["list"])
 
     def _parse_slp_res(self, slp_res):
         slp_res = self._add_missing(slp_res)
@@ -101,7 +114,7 @@ class SLPResponse(StatusResponse):
             "enforcesSecureChat": None,
             "description": "",
             "version": {"name": "", "protocol": -1},
-            "players": {"online": -1, "max": -1, "list":[]}
+            "players": {"online": -1, "max": -1, "list": []}
         }
 
         for key in default_res:
@@ -148,7 +161,8 @@ class QueryResponse(StatusResponse):
         self.hostip = self.res["hostip"]
         self.hostport = self.res["hostport"]
 
-        self.players = Players(self.res["numplayers"], self.res["maxplayers"], self.res["players"])
+        self.players = Players(
+            self.res["numplayers"], self.res["maxplayers"], self.res["players"])
         self.version = Version(self.res["version"], None)
         self.version.software = self.res["software"]
 
@@ -163,7 +177,7 @@ class BedrockResponse(StatusResponse):
         self.res["version"]["brand"] = self.raw_res[0]
         self.res["version"]["protocol"] = int(self.raw_res[2])
         self.res["version"]["name"] = self.raw_res[3]
-        self.res["motd"] = self.raw_res[1]
+        self.res["motd"] = self._remove_color_codes(self.raw_res[1])
         self.res["online_players"] = int(self.raw_res[4])
         self.res["max_players"] = int(self.raw_res[5])
         self.res["server_id"] = self.raw_res[6]
@@ -176,7 +190,8 @@ class BedrockResponse(StatusResponse):
         if len(self.raw_res) > 7:
             self.res["gametype"] = self.raw_res[8]
 
-        self.version = Version(self.res["version"]["name"], self.res["version"]["protocol"])
+        self.version = Version(
+            self.res["version"]["name"], self.res["version"]["protocol"])
         self.version.brand = self.res["version"]["brand"]
         self.motd = self.res["motd"]
         self.version = self.res["version"]
