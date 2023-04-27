@@ -3,20 +3,34 @@ import re
 
 
 class Players:
-    def __init__(self, online, max, list):
+    online: int
+    max: int | None
+
+    def __init__(self, online: int, max: int | None, player_list: list | None):
         self.online = online
         self.max = max
-        self.list = list
+        self.list: list | None = player_list
 
 
 class Version:
-    def __init__(self, name, protocol):
+    name: str
+    protocol: int | None
+    software: str
+    brand: str
+
+    def __init__(self, name: str, protocol: int | None):
         self.name = name
         self.protocol = protocol
 
 
 class StatusResponse:
-    def __init__(self, host, port, raw_res):
+    host: str
+    port: int
+    raw_res: str | dict | list
+    res: dict
+    timestamp: str
+
+    def __init__(self, host: str, port: int, raw_res: str | dict | list):
         self.host = host
         self.port = port
         self.raw_res = raw_res
@@ -25,7 +39,6 @@ class StatusResponse:
         self.res["host"] = self.host
         self.res["port"] = self.port
         self.timestamp = str(datetime.datetime.now())
-
 
     @staticmethod
     def _remove_color_codes(cstr: str, bedrock: bool = False) -> str:
@@ -48,7 +61,12 @@ class StatusResponse:
 
 
 class SLPResponse(StatusResponse):
-    def __init__(self, host, port, raw_res):
+    motd: str | dict
+    favicon: bool
+    version: Version
+    players: Players
+
+    def __init__(self, host: str, port: int, raw_res: dict):
         super().__init__(host, port, raw_res)
 
         self.res = self.res | self._parse_slp_res(self.raw_res)
@@ -59,7 +77,7 @@ class SLPResponse(StatusResponse):
         self.players = Players(
             self.res["players"]["online"], self.res["players"]["max"], self.res["players"]["list"])
 
-    def _parse_slp_res(self, slp_res):
+    def _parse_slp_res(self, slp_res) -> dict:
         slp_res = self._add_missing(slp_res)
 
         if "sample" in slp_res["players"]:
@@ -83,13 +101,13 @@ class SLPResponse(StatusResponse):
             slp_res["favicon"] = False
 
         slp_res["motd"] = self._parse_motd(slp_res["motd"])
-        slp_res["version"]["name"] = self._remove_color_codes(slp_res["version"]["name"])
+        slp_res["version"]["name"] = self._remove_color_codes(
+            cstr=slp_res["version"]["name"])
         slp_res["status"] = "online"
         return slp_res
 
-
     @classmethod
-    def _parse_motd(cls, raw_motd):
+    def _parse_motd(cls, raw_motd: str) -> str:
         motd = ""
         if type(raw_motd) == dict:
             entries = raw_motd.get("extra", [])
@@ -103,13 +121,12 @@ class SLPResponse(StatusResponse):
             motd = raw_motd
 
         motd = motd.replace("\n", " ").strip()
-        motd = cls._remove_color_codes(motd)
+        motd = cls._remove_color_codes(cstr=motd)
         return motd
 
-
     @staticmethod
-    def _add_missing(res):
-        default_res = {
+    def _add_missing(res: dict) -> dict:
+        default_res: dict = {
             "previewsChat": None,
             "enforcesSecureChat": None,
             "description": "",
@@ -125,8 +142,11 @@ class SLPResponse(StatusResponse):
         return res
 
 
-
 class LegacySLPResponse(StatusResponse):
+    motd: str
+    version: Version
+    players: Players
+
     def __init__(self, host, port, raw_res):
         super().__init__(host, port, raw_res)
 
@@ -135,9 +155,8 @@ class LegacySLPResponse(StatusResponse):
         self.version = Version(self.res["version"], None)
         self.players = Players(self.res["online"], self.res["max"], None)
 
-
     @staticmethod
-    def _parse_res(raw_res):
+    def _parse_res(raw_res) -> dict:
         res = {}
         res["version"] = raw_res[2]
         res["motd"] = raw_res[3]
@@ -146,9 +165,18 @@ class LegacySLPResponse(StatusResponse):
         return res
 
 
-
 class QueryResponse(StatusResponse):
-    def __init__(self, host, port, raw_res):
+    motd: str
+    gametype: str
+    game_id: str
+    plugins: list
+    map: str
+    hostip: str
+    hostport: int
+    players: Players
+    version: Version
+
+    def __init__(self, host: str, port: int, raw_res: dict):
         super().__init__(host, port, raw_res)
 
         self.res = raw_res | self.res
@@ -167,9 +195,15 @@ class QueryResponse(StatusResponse):
         self.version.software = self.res["software"]
 
 
-
 class BedrockResponse(StatusResponse):
-    def __init__(self, host, port, raw_res):
+    version: Version
+    motd: str
+    players: Players
+    server_id: int
+    map: str
+    gametype: str
+
+    def __init__(self, host: str, port: int, raw_res: list):
         super().__init__(host, port, raw_res)
 
         self.res = {}
@@ -177,7 +211,8 @@ class BedrockResponse(StatusResponse):
         self.res["version"]["brand"] = self.raw_res[0]
         self.res["version"]["protocol"] = int(self.raw_res[2])
         self.res["version"]["name"] = self.raw_res[3]
-        self.res["motd"] = self._remove_color_codes(self.raw_res[1])
+        self.res["motd"] = self._remove_color_codes(
+            cstr=self.raw_res[1], bedrock=True)
         self.res["online_players"] = int(self.raw_res[4])
         self.res["max_players"] = int(self.raw_res[5])
         self.res["server_id"] = self.raw_res[6]
@@ -194,9 +229,7 @@ class BedrockResponse(StatusResponse):
             self.res["version"]["name"], self.res["version"]["protocol"])
         self.version.brand = self.res["version"]["brand"]
         self.motd = self.res["motd"]
-        self.version = self.res["version"]
-        self.online_players = self.res["online_players"]
-        self.max_players = self.res["max_players"]
+        self.players = Players(self.res["online_players"], self.res["max_players"], None)
         self.server_id = self.res["server_id"]
         self.map = self.res["map"]
         self.gametype = self.res["gametype"]
