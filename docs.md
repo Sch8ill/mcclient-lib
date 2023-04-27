@@ -1,6 +1,7 @@
 # Documentation for MCClient
 
 ## Response fields
+
 | field                   | SLP     | Legacy SLP | Query | Bedrock SLP | Usage                    |
 | ----------------------- | ------- | ---------- | ----- | ----------- | ------------------------ |
 | motd                    | yes     | yes        | yes   | yes         | res.motd                 |
@@ -18,15 +19,15 @@
 | timestamp               | yes     | yes        | yes   | yes         | res.timstamp             |
 | response as dictonary   | yes     | yes        | yes   | yes         | res.res                  |
 
-
 ## Base client
-You can also write your own client using the [BaseClient](https://github.com/Sch8ill/MCClient-lib/blob/master/mcclient/base_client.py "github.com/Sch8ill/MCClient-lib/mcclient/base_client.py") class as a foundation.
-An example of this is this simple [login script](https://github.com/Sch8ill/MCClient-lib/blob/master/examples/login.py "github.com/Sch8ill/MCClient-lib/examples/login.py").
 
+You can also write your own client using the [BaseClient](https://github.com/Sch8ill/MCClient-lib/blob/master/mcclient/base_client.py "github.com/Sch8ill/MCClient-lib/mcclient/base_client.py") class as a foundation.
 
 ## Scanning
+
 This client is very usefull for scanning since it allows alredy connected sockets to be implanted into the client.
 Here is an example:
+
 ```python
 from mcclient import SLPClient
 

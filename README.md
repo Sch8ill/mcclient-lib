@@ -1,4 +1,4 @@
-# MCClient
+# MCClient-lib
 
 [![Downloads](https://static.pepy.tech/badge/mcclient-lib)](https://pepy.tech/project/mcclient-lib)
 [![PyPI](https://img.shields.io/pypi/v/mcclient-lib?color=green&label=PyPI%20package)](https://pypi.org/project/mcclient-lib/)
@@ -7,7 +7,7 @@ A lightweight Minecraft client for querying the status data of a Minecraft serve
 
 ## Supported Mincraft versions
 
-* Minecraft Java (v1.4.0 and newer)
+* Minecraft Java (v1.4.0 and later)
 * Minecraft Bedrock
 
 ## Supported protocols
