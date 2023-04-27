@@ -24,7 +24,7 @@ def test_remove_color_codes():
         ("§e§lHello §c§oWorld§r", True, "Hello World")
     ]
 
-    test_res = StatusResponse("", 0, None)
+    test_res = StatusResponse("", 0, {})
 
     for cstr, bedrock, expected_output in tests:
         assert test_res._remove_color_codes(cstr, bedrock) == expected_output

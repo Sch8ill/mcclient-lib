@@ -1,6 +1,6 @@
 from mcclient import QueryClient
 
-from tests.utils import BaseTestConn, TooManyPackets
+from tests.utils import BaseTestConn, TooManyPackets, create_mock_socket
 
 
 class QueryTestConn(BaseTestConn):
@@ -8,7 +8,6 @@ class QueryTestConn(BaseTestConn):
 
     def __init__(self):
         super().__init__()
-
 
     def sendto(self, data, *args):
         if self.packets == 0:
@@ -22,7 +21,8 @@ class QueryTestConn(BaseTestConn):
 
         elif self.packets == 1:
             self.packets += 1
-            assert len(data) == 11 or len(data) == 15 # check the packet length (11: basic stat, 15: full stat)
+            # check the packet length (11: basic stat, 15: full stat)
+            assert len(data) == 11 or len(data) == 15
             assert data[:3] == b"\xFE\xFD\x00"
             # implement checks for the rest of the packet (session id, challenge token)
 
@@ -38,14 +38,10 @@ class QueryTestConn(BaseTestConn):
             TooManyPackets(self.max_packets)
 
 
-
 def test_query_request():
-    test_conn = QueryTestConn()
+    socket = create_mock_socket(QueryTestConn)
+    test_conn = socket.socket()
     query_client = QueryClient("example.com")
-    query_client.sock = test_conn # implant test socket
+    query_client.sock = test_conn  # implant test socket
     query_client.get_status()
     # Todo: add checks for response
-
-
-if __name__ == "__main__":
-    test_query_request()

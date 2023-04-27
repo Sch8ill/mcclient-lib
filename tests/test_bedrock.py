@@ -1,13 +1,13 @@
 from mcclient import BedrockSLPClient
 
-from tests.utils import BaseTestConn, TooManyPackets
+from tests.utils import BaseTestConn, TooManyPackets, create_mock_socket
 
 
 class BedrockTestConn(BaseTestConn):
     max_packets = 1
+
     def __init__(self):
         super().__init__()
-
 
     def sendto(self, data, *args):
         if self.packets == 0:
@@ -22,10 +22,10 @@ class BedrockTestConn(BaseTestConn):
             raise TooManyPackets(self.max_packets)
 
 
-
 def test_bedrock():
-    test_conn = BedrockTestConn()
+    socket = create_mock_socket(BedrockTestConn)
+    test_conn = socket.socket()
     bedrock_client = BedrockSLPClient("example.com")
-    bedrock_client.sock = test_conn # implant test socket
+    bedrock_client.sock = test_conn  # implant test socket
     bedrock_client.get_status()
     # Todo: add checks for response
