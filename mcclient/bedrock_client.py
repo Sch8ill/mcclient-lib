@@ -14,20 +14,16 @@ class BedrockSLPClient:
     hostname: str
     sock: socket.socket
 
-    def __init__(self, host: str, port: int = DEFAULT_BEDROCK_PORT, timeout: int = DEFAULT_TIMEOUT, srv: bool = True):
+    def __init__(self, host: str, port: int = DEFAULT_BEDROCK_PORT, timeout: int = DEFAULT_TIMEOUT):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.port = port
+        self.hostname = host
         self.sock.settimeout(timeout)
-        self.get_host(host, port, srv)
+        self.get_host(host)
 
-    def get_host(self, hostname: str, port: int, srv: bool) -> None:
+    def get_host(self, hostname: str) -> None:
         addr = Address(hostname)
-        self.host, srv_port = addr.get_host(srv)
-        self.hostname = hostname
-        if srv_port == -1:
-            self.port = port
-
-        else:
-            self.port = srv_port
+        self.host, _ = addr.get_host(False)
 
     def get_status(self) -> BedrockResponse:
         raw_res = self._request_status()
