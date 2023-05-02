@@ -2,15 +2,14 @@ import ipaddress
 
 import dns.resolver
 
+MINECRAFT_SRV_PREFIX = "_minecraft._tcp."
 
 class Address:
     addr: str
-    proto: str
     is_ip: bool
 
-    def __init__(self, addr: str, proto: str = "tcp"):
+    def __init__(self, addr: str):
         self.addr = addr
-        self.proto = proto
         self.is_ip = self._ip_check(self.addr)
 
     def get_host(self, srv: bool = True) -> tuple[str, int]:
@@ -24,7 +23,7 @@ class Address:
         host = self._resolve_a_record(hostname)
         if srv:
             try:
-                srv_record = self._mc_srv_lookup(hostname, self.proto)
+                srv_record = self._mc_srv_lookup(hostname)
                 return host, srv_record[1]
 
             except Exception:
@@ -33,10 +32,8 @@ class Address:
         return host, -1  # -1 = no srv port
 
     @staticmethod
-    def _mc_srv_lookup(hostname: str, proto: str) -> tuple[str, int]:
-        srv_prefix = f"_minecraft._{proto}."
-        # only use the first srv record returned
-        srv_record = dns.resolver.resolve(srv_prefix + hostname, "SRV")[0]
+    def _mc_srv_lookup(hostname: str) -> tuple[str, int]:
+        srv_record = dns.resolver.resolve(MINECRAFT_SRV_PREFIX + hostname, "SRV")[0]
         host = str(srv_record.target).rstrip(".")
         port = int(srv_record.port)
         return host, port
