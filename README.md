@@ -5,17 +5,17 @@
 
 A lightweight Minecraft client for querying the status data of a Minecraft server.
 
-## Supported Mincraft versions
+## Supported Minecraft versions
 
 * Minecraft Java (v1.4.0 and later)
 * Minecraft Bedrock
 
 ## Supported protocols
 
-* [ServerListPing](https://wiki.vg/Server_List_Ping "wiki.vg/Server_List_Ping") for Minecraft java servers
-* [Legacy ServerListPing](https://wiki.vg/Server_List_Ping#1.4_to_1.5 "wiki.vg/Server_List_Ping#1.4_to_1.5") for Minecraft java servers before 1.4
-* [Query Protocol](https://wiki.vg/Query "wiki.vg/Query") for Minecraft java servers (this needs to be enabled on the server)
-* [Bedrock ServerListPing](https://wiki.vg/Raknet_Protocol#Unconnected_Ping "wiki.vg/Raknet_Protocol#Unconnected_Ping") for Bedrock servers
+* [ServerListPing](https://wiki.vg/Server_List_Ping "wiki.vg/Server_List_Ping") for Minecraft Java servers
+* [Legacy ServerListPing](https://wiki.vg/Server_List_Ping#1.4_to_1.5 "wiki.vg/Server_List_Ping#1.4_to_1.5") for Minecraft Java servers before 1.4
+* [Query Protocol](https://wiki.vg/Query "wiki.vg/Query") for Minecraft Java servers (this needs to be enabled on the server)
+* [Bedrock ServerListPing](https://wiki.vg/Raknet_Protocol#Unconnected_Ping "wiki.vg/Raknet_Protocol#Unconnected_Ping") for Minecraft Bedrock servers
 
 ## Installation
 
@@ -25,9 +25,9 @@ A lightweight Minecraft client for querying the status data of a Minecraft serve
 pip3 install mcclient-lib
 ```
 
-### pip + github
+### pip + Github
 
- You can also install the package directly from github.
+ Alternatively, you can install the package directly from Github.
 
  ```bash
  pip3 install git+https://github.com/Sch8ill/MCClient-lib.git
@@ -40,8 +40,8 @@ pip3 install mcclient-lib
 ```python
 from mcclient import SLPClient
 
-# for Minecraft Java servers from 1.7.* and newer
-slp_client = SLPClient("mc.example.com", port=12345)
+# for Minecraft Java servers from version 1.7.0 and later
+slp_client = SLPClient("mc.example.com")
 res = slp_client.get_status()
  ```
 
@@ -51,7 +51,7 @@ res = slp_client.get_status()
 from mcclient import QueryClient
 
 # for Minecraft Java servers (needs to be enabled on the server)
-query_client = QueryClient("mc.example.com", port=12345)
+query_client = QueryClient("mc.example.com")
 res = query_client.get_status()
 ```
 
@@ -61,7 +61,7 @@ res = query_client.get_status()
 from mcclient import BedrockSLPClient
 
 # for Minecraft Bedrock servers
-bedrock_slp_client = BedrockSLPClient("mc.example.com", port=12345)
+bedrock_slp_client = BedrockSLPClient("mc.example.com")
 res = bedrock_slp_client.get_status()
 ```
 
@@ -89,13 +89,13 @@ plugins = res.plugins
 # only for basic ServerListPing
 has_favicon = res.favicon
 
-# only for query and Bedrock
+# only for query and Bedrock responses
 gametype = res.gametype
 
-# only for query and bedrock
+# only for query and bedrock responses
 map = res.map
 
-# only for bedrock
+# only for bedrock responses
 server_id = res.server_id
 
 # timestamp of the request
@@ -108,20 +108,20 @@ res_dictionary = res.res
 
 ## Queryable data
 
-* motd
-* online player count
-* max player count
-* player list
-* server version
-* server protocol version
-* mods and plugins
-* has a favicon
-* name of map
-* hostport and hostip
-* gametype
-* server id
+* MOTD
+* Online player count
+* Max player count
+* Player list
+* Server version
+* Server protocol version
+* Mods and plugins
+* Has a favicon
+* Name of the map
+* Hostport and hostip
+* Gametype
+* Server ID
 
-Note: not every field is queryable with every protocol.
+Note that not every field is queryable with every protocol.
 
 ## Documentation
 

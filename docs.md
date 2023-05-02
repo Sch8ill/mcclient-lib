@@ -2,22 +2,22 @@
 
 ## Response fields
 
-| field                   | SLP     | Legacy SLP | Query | Bedrock SLP | Usage                    |
-| ----------------------- | ------- | ---------- | ----- | ----------- | ------------------------ |
-| motd                    | yes     | yes        | yes   | yes         | res.motd                 |
-| online player count     | yes     | yes        | yes   | yes         | res.players.online       |
-| max players             | yes     | yes        | yes   | yes         | res.players.max          |
-| player list             | depends | no         | yes   | no          | res.players.list         |
-| server version          | yes     | yes        | yes   | yes         | res.version.name         |
-| server protocol version | yes     | no         | yes   | yes         | res.version.protocol     |
-| mods and plugins        | depends | no         | yes   | no          | res.plugins              |
-| has favicon             | yes     | no         | no    | no          | res.favicon              |
-| gametype                | no      | no         | yes   | depends     | res.gametype             |
-| name of map             | no      | no         | yes   | depends     | res.map                  |
-| server id               | no      | no         | no    | yes         | res.server_id            |
-| host port and ip        | no      | no         | yes   | no          | res.hostport, res.hostip |
-| timestamp               | yes     | yes        | yes   | yes         | res.timstamp             |
-| response as dictonary   | yes     | yes        | yes   | yes         | res.res                  |
+| field                   | SLP     | Legacy SLP | Query | Bedrock | Usage                    |
+| ----------------------- | ------- | ---------- | ----- | ------- | ------------------------ |
+| motd                    | yes     | yes        | yes   | yes     | res.motd                 |
+| online player count     | yes     | yes        | yes   | yes     | res.players.online       |
+| max players             | yes     | yes        | yes   | yes     | res.players.max          |
+| player list             | depends | no         | yes   | no      | res.players.list         |
+| server version          | yes     | yes        | yes   | yes     | res.version.name         |
+| server protocol version | yes     | no         | yes   | yes     | res.version.protocol     |
+| mods and plugins        | depends | no         | yes   | no      | res.plugins              |
+| has favicon             | yes     | no         | no    | no      | res.favicon              |
+| gametype                | no      | no         | yes   | depends | res.gametype             |
+| name of map             | no      | no         | yes   | depends | res.map                  |
+| server id               | no      | no         | no    | yes     | res.server_id            |
+| host port and ip        | no      | no         | yes   | no      | res.hostport, res.hostip |
+| timestamp               | yes     | yes        | yes   | yes     | res.timstamp             |
+| response as dictonary   | yes     | yes        | yes   | yes     | res.res                  |
 
 ## Base client
 
@@ -33,9 +33,13 @@ from mcclient import SLPClient
 
 def mc_check(sock, ip, port):
     try:
-        slp_client = SLPClient(host=ip, port=port) # initiate the client
-        slp_client.implant_socket(sock) # implant the already connected socket
-        res = slp_client.get_status() # retreive the status data
+        # initiate the client
+        # srv=False disables srv lookups, this can improve performance when only connecting to ip's/domain's without srv records.
+        slp_client = SLPClient(host=ip, port=port, srv=False)
+        # implant the already connected socket
+        slp_client.implant_socket(sock)
+        # retreive the status data
+        res = slp_client.get_status()
 
     except Exception as e:
         ...
