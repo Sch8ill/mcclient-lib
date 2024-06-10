@@ -21,7 +21,7 @@ class QueryClient:
         self.sock.settimeout(timeout)
 
     def _handshake(self) -> None:
-        # generate session id from int between 0 and 2147483648
+        # generate session id from an integer between 0 and 2147483648
         self.session_id = random.randint(0, 2147483648) & 0x0F0F0F0F
         packet = QueryPacket(
             9,  # type 9 for handshaking
@@ -48,7 +48,7 @@ class QueryClient:
         # challenge token and some padding for a full status request
         payload = self.token + b"\x00\x00\x00\x00"
         packet = QueryPacket(
-            0,  # packettype 0 for a status request
+            0,  # 0 for a status request
             self.session_id,
             payload
         )
@@ -85,7 +85,7 @@ class QueryClient:
             else:
                 key_field = True
 
-        # convert strings to int's
+        # convert strings to ints
         for key in ["numplayers", "maxplayers", "hostport"]:
             data[key] = int(data[key])
 
@@ -99,7 +99,7 @@ class QueryClient:
         else:
             data["plugins"] = []
 
-        # remove endpadding
+        # remove end padding
         raw_players = raw_players[:-2]
         # split players
         players = raw_players.split(b"\x00")

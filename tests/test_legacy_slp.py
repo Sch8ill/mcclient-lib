@@ -5,7 +5,7 @@ from tests.utils import TooManyPackets, BaseTestConn, create_mock_socket
 TEST_HOSTNAME = "example.com"
 
 
-class LegaySLPTestConn(BaseTestConn):
+class LegacySLPTestConn(BaseTestConn):
     max_packets = 1
 
     def __init__(self):
@@ -23,7 +23,7 @@ class LegaySLPTestConn(BaseTestConn):
                 \x00\x66\x00\x74\x00\x20\x00\x53\x00\x65\x00\x72\x00
                 \x76\x00\x65\x00\x72\x00\x00\x00\x30\x00\x00\x00\x32
                 \x00\x30"""
-            # test packet dump from a raw leagy slp response, SHOULD be changed in the future!!
+            # test packet dump from a raw legacy slp response, SHOULD be changed in the future!!
             self.respond(test_res)
 
         elif self.packets >= self.max_packets:
@@ -31,7 +31,7 @@ class LegaySLPTestConn(BaseTestConn):
 
 
 def test_legacy_slp_request():
-    socket = create_mock_socket(LegaySLPTestConn)
+    socket = create_mock_socket(LegacySLPTestConn)
     test_conn = socket.socket()
     legacy_slp_client = LegacySLPClient(TEST_HOSTNAME)
     legacy_slp_client.implant_socket(test_conn)
