@@ -5,11 +5,12 @@ import re
 class Players:
     online: int
     max: int | None
+    list: list | None
 
     def __init__(self, online: int, max: int | None, player_list: list | None):
         self.online = online
         self.max = max
-        self.list: list | None = player_list
+        self.list = player_list
 
 
 class Version:
@@ -34,10 +35,7 @@ class StatusResponse:
         self.host = host
         self.port = port
         self.raw_res = raw_res
-        self.res = {}
-
-        self.res["host"] = self.host
-        self.res["port"] = self.port
+        self.res = {"host": self.host, "port": self.port}
         self.timestamp = str(datetime.datetime.now())
 
     @staticmethod
@@ -62,7 +60,7 @@ class StatusResponse:
 
 class SLPResponse(StatusResponse):
     motd: str | dict
-    favicon: bool
+    favicon: str | None
     version: Version
     players: Players
 
@@ -95,7 +93,7 @@ class SLPResponse(StatusResponse):
             player["last_seen"] = self.timestamp
 
         if "favicon" in slp_res:
-            slp_res["favicon"] = True
+            slp_res["favicon"] = slp_res["favicon"]
 
         else:
             slp_res["favicon"] = False
@@ -109,7 +107,7 @@ class SLPResponse(StatusResponse):
     @classmethod
     def _parse_motd(cls, raw_motd: str) -> str:
         motd = ""
-        if type(raw_motd) == dict:
+        if isinstance(raw_motd, dict):
             entries = raw_motd.get("extra", [])
             end = raw_motd.get("text", "")
 
@@ -117,7 +115,7 @@ class SLPResponse(StatusResponse):
                 motd += entry.get("text", "")
             motd += end
 
-        elif type(raw_motd) == str:
+        elif isinstance(raw_motd, str):
             motd = raw_motd
 
         motd = motd.replace("\n", " ").strip()
@@ -157,11 +155,7 @@ class LegacySLPResponse(StatusResponse):
 
     @staticmethod
     def _parse_res(raw_res) -> dict:
-        res = {}
-        res["version"] = raw_res[2]
-        res["motd"] = raw_res[3]
-        res["online"] = raw_res[4]
-        res["max"] = raw_res[5]
+        res = {"version": raw_res[2], "motd": raw_res[3], "online": raw_res[4], "max": raw_res[5]}
         return res
 
 
@@ -206,19 +200,13 @@ class BedrockResponse(StatusResponse):
     def __init__(self, host: str, port: int, raw_res: list):
         super().__init__(host, port, raw_res)
 
-        self.res = {}
-        self.res["version"] = {}
-        self.res["version"]["brand"] = self.raw_res[0]
-        self.res["version"]["protocol"] = int(self.raw_res[2])
-        self.res["version"]["name"] = self.raw_res[3]
-        self.res["motd"] = self._remove_color_codes(
-            cstr=self.raw_res[1], bedrock=True)
-        self.res["online_players"] = int(self.raw_res[4])
-        self.res["max_players"] = int(self.raw_res[5])
-        self.res["server_id"] = self.raw_res[6]
+        self.res = {"version": {
+            "brand": self.raw_res[0],
+            "protocol": int(self.raw_res[2]),
+            "name": self.raw_res[3]
+        }, "motd": self._remove_color_codes(cstr=self.raw_res[1], bedrock=True), "online_players": int(self.raw_res[4]),
+            "max_players": int(self.raw_res[5]), "server_id": self.raw_res[6], "map": None, "gametype": None}
 
-        self.res["map"] = None
-        self.res["gametype"] = None
         if len(self.raw_res) > 6:
             self.res["map"] = self.raw_res[7]
 
