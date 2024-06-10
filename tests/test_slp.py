@@ -3,6 +3,7 @@ import struct
 
 from mcclient import SLPClient
 from mcclient.encoding.packet import Packet
+from mcclient.encoding.varint import pack_varint
 
 from tests.utils import TooManyPackets, BaseTestConn, create_mock_socket
 
@@ -46,10 +47,10 @@ class SLPTestConn(BaseTestConn):
             self.packets += 1
             test_packet = Packet(
                 b"\x00",  # packet id
-                self.varint.pack(self.proto),
+                pack_varint(self.proto),
                 self.hostname,
                 struct.pack(">H", TEST_PORT),
-                self.varint.pack(1)
+                pack_varint(1)
             )
             assert data == test_packet.pack()
 

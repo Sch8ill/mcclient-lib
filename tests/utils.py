@@ -1,7 +1,5 @@
 from unittest.mock import Mock
 
-from mcclient.encoding.varint import VarInt
-
 
 class TooManyPackets(Exception):
     def __init__(self, max_packets):
@@ -10,8 +8,6 @@ class TooManyPackets(Exception):
 
 
 class BaseTestConn:
-    varint = VarInt()
-
     def __init__(self):
         self.packets = 0
         self._buffer = b""

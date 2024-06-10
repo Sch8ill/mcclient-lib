@@ -1,34 +1,35 @@
 import struct
 
-from mcclient.encoding.varint import VarInt
+from mcclient.encoding.varint import pack_varint
 
 
 class Packet:
     fields: tuple
-    varint: VarInt
 
     def __init__(self, *fields):
         self.fields = fields
-        self.varint = VarInt()
 
     def pack(self) -> bytes:
         packet = b""
         for field in self.fields:
-            field = self._encode(field)
-            packet += field
+            packet += self._encode(field)
 
-        packet = self.varint.pack(len(packet)) + \
-            packet  # add the packet length
-        return packet
+        # add the packet length
+        return pack_varint(len(packet)) + packet
 
-    def _encode(self, data) -> bytes:
-        if type(data) == str:
-            data = data.encode("utf-8")
-            data = self.varint.pack(len(data)) + data
+    @staticmethod
+    def _encode(data) -> bytes:
+        if isinstance(data, str):
+            str_bytes = data.encode("utf-8")
+            return pack_varint(len(str_bytes)) + str_bytes
 
-        elif type(data) == bool:
-            data = b"\x01" if data else b"\x00"
-        return data
+        elif isinstance(data, bytes):
+            return data
+
+        elif isinstance(data, bool):
+            return b"\x01" if data else b"\x00"
+
+        raise TypeError(f"Type {type(data)} cannot be encoded")
 
 
 class QueryPacket:
@@ -36,7 +37,7 @@ class QueryPacket:
     session_id: int
     payload: bytes
 
-    def __init__(self, type, session_id, payload):
+    def __init__(self, type: int, session_id: int, payload: bytes):
         self.type = type
         self.session_id = session_id
         self.payload = payload
