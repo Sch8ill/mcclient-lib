@@ -2,51 +2,51 @@ import ipaddress
 
 import dns.resolver
 
-MINECRAFT_SRV_PREFIX = "_minecraft._tcp."
 
 class Address:
-    addr: str
-    is_ip: bool
+    host: str
+    port: int
+    srv_host: str
+    srv_port: int
+    srv: bool
 
-    def __init__(self, addr: str):
-        self.addr = addr
-        self.is_ip = self._ip_check(self.addr)
+    def __init__(self, host: str, port: int) -> None:
+        self.host = host
+        self.port = port
+        self.srv = False
 
-    def get_host(self, srv: bool = True) -> tuple[str, int]:
-        if self.is_ip:
-            return self.addr, -1
+    def resolve(self) -> None:
+        if self.is_ip():
+            return
 
-        else:
-            return self._resolve_hostname(self.addr, srv)
-
-    def _resolve_hostname(self, hostname: str, srv: bool) -> tuple[str, int]:
-        host = self._resolve_a_record(hostname)
-        if srv:
-            try:
-                srv_record = self._mc_srv_lookup(hostname)
-                return host, srv_record[1]
-
-            except Exception:
-                pass
-
-        return host, -1  # -1 = no srv port
-
-    @staticmethod
-    def _mc_srv_lookup(hostname: str) -> tuple[str, int]:
-        srv_record = dns.resolver.resolve(MINECRAFT_SRV_PREFIX + hostname, "SRV")[0]
-        host = str(srv_record.target).rstrip(".")
-        port = int(srv_record.port)
-        return host, port
-
-    @staticmethod
-    def _resolve_a_record(hostname: str) -> str:
-        record = dns.resolver.resolve(hostname, "A")[0]
-        return str(record).rstrip(".")
-
-    @staticmethod
-    def _ip_check(addr: str) -> bool:
         try:
-            ipaddress.ip_address(addr)
+            record = dns.resolver.resolve("_minecraft._tcp." + self.host, "SRV")[0]
+            self.srv_host = str(record.target).rstrip(".")
+            self.srv_port = record.port
+            self.srv = True
+
+        except Exception:
+            pass
+
+    def address(self) -> tuple[str, int]:
+        return self.get_host(), self.get_port()
+
+    def get_host(self) -> str:
+        if self.srv:
+            return self.srv_host
+
+        return self.host
+
+    def get_port(self) -> int:
+        if self.srv:
+            return self.srv_port
+
+        return self.port
+
+    def is_ip(self) -> bool:
+        try:
+            ipaddress.ip_address(self.host)
             return True
+
         except ValueError:
             return False

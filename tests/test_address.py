@@ -4,12 +4,12 @@ from mcclient.address import Address
 def test_address():
     # random addresses for testing
 
-    test_domain = Address("google.com").get_host()
+    assert Address("google.com", 0).get_host() == "google.com"
     # add more tests for test_domain
 
-    test_ip = Address("23.23.23.23").get_host()
-    assert test_ip[0] == "23.23.23.23"
+    assert Address("23.23.23.23", 0).get_host() == "23.23.23.23"
 
     # random addresses for testing
-    test_srv_record = Address("pokecentral.org").get_host()
-    assert test_srv_record[1] == 25565
+    addr = Address("hypixel.net", 0)
+    addr.resolve()
+    assert addr.address() == ("mc.hypixel.net", 25565)

@@ -9,33 +9,25 @@ DEFAULT_BEDROCK_PORT = 19132
 
 
 class BedrockSLPClient:
-    host: str
-    port: int
-    hostname: str
+    address: Address
     sock: socket.socket
 
     def __init__(self, host: str, port: int = DEFAULT_BEDROCK_PORT, timeout: int = DEFAULT_TIMEOUT):
+        self.address = Address(host, port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.port = port
-        self.hostname = host
         self.sock.settimeout(timeout)
-        self.get_host(host)
-
-    def get_host(self, hostname: str) -> None:
-        addr = Address(hostname)
-        self.host, _ = addr.get_host(False)
 
     def get_status(self) -> BedrockResponse:
         raw_res = self._request_status()
         res = self._parse_res(raw_res)
-        return BedrockResponse(self.hostname, self.port, res)
+        return BedrockResponse(self.address.host, self.address.port, res)
 
     def _request_status(self) -> bytes:
         """
         needs to be updated (https://wiki.vg/Raknet_Protocol#Unconnected_Ping)
         """
         status_request = b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\xfe\xfe\xfe\xfe\xfd\xfd\xfd\xfd\x124Vx"
-        self.sock.sendto(status_request, (self.host, self.port))
+        self.sock.sendto(status_request, self.address.address())
         return self.sock.recv(4096)
 
     @staticmethod
