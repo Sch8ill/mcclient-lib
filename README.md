@@ -12,26 +12,18 @@ A lightweight Minecraft client for querying the status data of a Minecraft serve
 
 ## Supported protocols
 
-* [ServerListPing](https://wiki.vg/Server_List_Ping "wiki.vg/Server_List_Ping") for Minecraft Java servers
-* [Legacy ServerListPing](https://wiki.vg/Server_List_Ping#1.4_to_1.5 "wiki.vg/Server_List_Ping#1.4_to_1.5") for Minecraft Java servers before 1.4
-* [Query Protocol](https://wiki.vg/Query "wiki.vg/Query") for Minecraft Java servers (this needs to be enabled on the server)
-* [Bedrock ServerListPing](https://wiki.vg/Raknet_Protocol#Unconnected_Ping "wiki.vg/Raknet_Protocol#Unconnected_Ping") for Minecraft Bedrock servers
+* [ServerListPing](https://wiki.vg/Server_List_Ping) for Minecraft Java servers
+* [Legacy ServerListPing](https://wiki.vg/Server_List_Ping#1.4_to_1.5) for Minecraft Java servers before 1.4
+* [Query Protocol](https://wiki.vg/Query) for Minecraft Java servers (this needs to be enabled on the server)
+* [Bedrock ServerListPing](https://wiki.vg/Raknet_Protocol#Unconnected_Ping) for Minecraft Bedrock servers
 
 ## Installation
 
-### pypi
+### pip
 
 ```bash
-pip3 install mcclient-lib
+pip install mcclient-lib
 ```
-
-### pip + Github
-
- Alternatively, you can install the package directly from Github.
-
- ```bash
- pip3 install git+https://github.com/Sch8ill/MCClient-lib.git
- ```
 
 ## Usage
 
@@ -70,40 +62,31 @@ res = bedrock_slp_client.get_status()
 How to handle the returned response object
 
 ```python
-# The server address and port
-host = res.host
-port = host.port
+print(f"host: {res.host}")
+print(f"port: {res.port}")
+print(f"motd: {res.motd}")
 
-motd = res.motd
+print(f"online players: {res.players.online}")
+print(f"max players: {res.players.max}")
+print(f"players list: {res.players.list}")
 
-online_players = res.players.online
-max_players = res.players.max
-player_list = res.players.list
+print(f"version: {res.version.name}")
+print(f"protocol version: {res.version.protocol}")
 
-version = res.version.name
-protocol_version = res.version.protocol
-
-# only for query responses
-plugins = res.plugins
-
-# only for basic ServerListPing
-has_favicon = res.favicon
+print(f"timestamp: {res.timestamp}")
+print(f"favicon: {res.favicon is not None}")
 
 # only for query and Bedrock responses
-gametype = res.gametype
+print(f"gametype: {res.gametype}")
+print(f"map: {res.map}")
 
-# only for query and bedrock responses
-map = res.map
+# only for query responses
+print(f"plugins: {res.plugins}")
+print(f"host ip: {res.hostip}")
+print(f"host port: {res.hostport}")
 
 # only for bedrock responses
-server_id = res.server_id
-
-# timestamp of the request
-timestamp = res.timestamp
-
-# the reponse as a dictonary with some further infomation
-# the keys are named like the values in the response object
-res_dictionary = res.res
+print(f"server id: {res.server_id}")
 ```
 
 ## Queryable data
