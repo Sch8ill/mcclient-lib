@@ -1,7 +1,7 @@
-__pycache__/
-.config/
 venv/
-.git/
+.idea
+.config/
+__pycache__/
 *.egg-info/
 build/
 dist/
