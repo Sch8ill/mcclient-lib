@@ -3,26 +3,23 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools>=61.0"]
 
 [project]
-authors = [
-  {name = "Sch8ill", email = "noreply@noreply.com"},
+authors = [{ name = "Sch8ill", email = "noreply@noreply.com" },
 ]
-classifiers = [
-  "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License",
-  "Operating System :: OS Independent",
+classifiers = ["Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
 ]
-dependencies = [
-  "dnspython>=2.2.1",
+dependencies = ["dnspython>=2.2.1",
 ]
 description = "A lightweight Minecraft client for querying the status data of a Minecraft server."
 name = "mcclient-lib"
 readme = "README.md"
 requires-python = ">=3.7"
-version = "1.1.1"
+version = "1.2.0"
 
 [project.urls]
-"Bug Tracker" = "https://github.com/Sch8ill/MCClient-lib/issues"
-"Homepage" = "https://github.com/Sch8ill/MCClient-lib"
+"Bug Tracker" = "https://github.com/sch8ill/mcclient-lib/issues"
+"Homepage" = "https://github.com/Sch8ill/mcclient-lib"
 
 [tool.pytest.ini_options]
 addopts = "--cov=mcclient --ignore=examples"
