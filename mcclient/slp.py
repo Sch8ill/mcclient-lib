@@ -1,9 +1,8 @@
 import json
 
+from mcclient.base_client import BaseClient, DEFAULT_PORT, DEFAULT_TIMEOUT, DEFAULT_PROTO
+from mcclient.packet import OutboundPacket, InboundPacket
 from mcclient.response import SLPResponse, LegacySLPResponse
-from mcclient.base_client import BaseClient
-from mcclient.base_client import DEFAULT_PORT, DEFAULT_TIMEOUT, DEFAULT_PROTO
-from mcclient.encoding.packet import Packet
 
 
 class SLPClient(BaseClient):
@@ -18,16 +17,14 @@ class SLPClient(BaseClient):
         return SLPResponse(self.address.get_host(), self.address.get_port(), res)
 
     def _status_request(self) -> dict:
-        packet = Packet(b"\x00")  # send status request
-        self._send(packet)
-        _, res = self._recv()
-        self._close()
+        req = OutboundPacket(0)
+        req.write(self.sock)
 
-        # TODO: read string length from bytes
-        res_data = res[2:]
-        res_str = res_data.decode("utf-8")
-        res_dict = json.loads(res_str)
-        return res_dict
+        packet = InboundPacket(self.sock)
+        res = packet.read_string()
+
+        self._close()
+        return json.loads(res)
 
 
 class LegacySLPClient(BaseClient):

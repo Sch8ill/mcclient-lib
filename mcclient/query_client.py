@@ -1,10 +1,23 @@
+import random
 import socket
 import struct
-import random
 
-from mcclient.response import QueryResponse
-from mcclient.encoding.packet import QueryPacket
 from mcclient.base_client import DEFAULT_PORT, DEFAULT_TIMEOUT
+from mcclient.response import QueryResponse
+
+
+class QueryPacket:
+    def __init__(self, packet_type: int, session_id: int, payload: bytes):
+        self.type = packet_type
+        self.session_id = session_id
+        self.payload = payload
+
+    def pack(self) -> bytes:
+        packet = b"\xFE\xFD"  # padding
+        packet += struct.pack(">B", self.type)
+        packet += struct.pack('>l', self.session_id)
+        packet += self.payload
+        return packet
 
 
 class QueryClient:
@@ -19,6 +32,10 @@ class QueryClient:
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.settimeout(timeout)
+
+    def get_status(self) -> QueryResponse:
+        res = self._query_request()
+        return QueryResponse(self.host, self.port, res)
 
     def _handshake(self) -> None:
         # generate session id from an integer between 0 and 2147483648
@@ -38,10 +55,9 @@ class QueryClient:
 
     def _recv(self) -> tuple[int, bytes, bytes]:
         res = self.sock.recv(4096)
-        type = res[0]
+        packet_type = res[0]
         session_id = res[1:5]
-        payload = res[5:]
-        return type, session_id, payload
+        return packet_type, session_id, res[5:]
 
     def _query_request(self) -> dict:
         self._handshake()
@@ -55,10 +71,6 @@ class QueryClient:
         self._send(packet)
         raw_res = self._recv()
         return self._read_query(raw_res[2])
-
-    def get_status(self) -> QueryResponse:
-        res = self._query_request()
-        return QueryResponse(self.host, self.port, res)
 
     @staticmethod
     def _read_query(res: bytes) -> dict:

@@ -1,10 +1,7 @@
 import json
-import struct
 
 from mcclient import SLPClient
-from mcclient.encoding.packet import Packet
-from mcclient.encoding.varint import pack_varint
-
+from mcclient.packet import OutboundPacket
 from tests.utils import TooManyPackets, BaseTestConn, create_mock_socket
 
 TEST_PROTO = 47
@@ -45,13 +42,13 @@ class SLPTestConn(BaseTestConn):
     def send(self, data):
         if self.packets == 0:
             self.packets += 1
-            test_packet = Packet(
-                b"\x00",  # packet id
-                pack_varint(self.proto),
-                self.hostname,
-                struct.pack(">H", TEST_PORT),
-                pack_varint(1)
-            )
+
+            test_packet = OutboundPacket(0)
+            test_packet.write_varint(self.proto)
+            test_packet.write_string(self.hostname)
+            test_packet.write_ushort(TEST_PORT)
+            test_packet.write_varint(1)
+
             assert data == test_packet.pack()
 
         elif self.packets == 1:
@@ -63,10 +60,8 @@ class SLPTestConn(BaseTestConn):
             raise TooManyPackets(self.max_packets)
 
     def respond_res(self):
-        packet = Packet(
-            b"\x00",
-            json.dumps(self.base_res)
-        )
+        packet = OutboundPacket(0)
+        packet.write_string(json.dumps(self.base_res))
         self.respond(packet.pack())
 
 

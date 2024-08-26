@@ -1,19 +1,12 @@
 import socket
-import struct
 
 from mcclient.address import Address
-from mcclient.encoding.packet import Packet
-from mcclient.encoding.varint import pack_varint, read_varint
+from mcclient.packet import OutboundPacket
 
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 25565
 DEFAULT_TIMEOUT = 5
 DEFAULT_PROTO = 47
-
-
-class IncompletePacket(Exception):
-    def __init__(self, size, missing):
-        super().__init__(f"Incomplete packet: missing {missing} from {size} bytes.")
 
 
 class BaseClient:
@@ -44,35 +37,12 @@ class BaseClient:
         self.connected = True
 
     def _handshake(self, next_state: int = 1) -> None:
-        packet = Packet(
-            b"\x00",  # packet id
-            pack_varint(self.protocol_version),
-            self.address.get_host(),
-            struct.pack(">H", self.address.get_port()),
-            pack_varint(next_state)  # next state 1 for status request
-        )
-        self._send(packet)
-
-    def _send(self, packet: Packet) -> int:
-        return self.sock.send(packet.pack())
-
-    def _recv(self) -> tuple[int, bytes]:
-        length = read_varint(self.sock)
-        packet_id = read_varint(self.sock)
-        return packet_id, self._recv_bytes(length)
-
-    def _recv_bytes(self, length: int) -> bytes:
-        received = 0
-        data = b""
-        while received < length - len(pack_varint(length)):
-            chunk = self.sock.recv(length - received)
-            data += chunk
-            received += len(chunk)
-
-            if chunk == b"":
-                raise IncompletePacket(length, length - received)
-
-        return data
+        p = OutboundPacket(0)
+        p.write_varint(self.protocol_version)
+        p.write_string(self.address.get_host())
+        p.write_ushort(self.address.get_port())
+        p.write_varint(next_state)
+        p.write(self.sock)
 
     def _close(self):
         self.sock.close()
