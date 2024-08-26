@@ -47,7 +47,7 @@ class StatusResponse:
 
         Args:
         cstr (str): The string to remove color codes from.
-        bedrock (bool): Wether to method should remove bedrock color/formating codes.
+        bedrock (bool): Whether to method should remove bedrock color/formating codes.
 
         Returns:
         str: The input string stripped of all Minecraft color/formatting codes.
@@ -105,13 +105,17 @@ class SLPResponse(StatusResponse):
         return slp_res
 
     @classmethod
-    def _parse_motd(cls, raw_motd: str) -> str:
+    def _parse_motd(cls, raw_motd: str | dict) -> str:
         motd = ""
         if isinstance(raw_motd, dict):
             entries = raw_motd.get("extra", [])
             end = raw_motd.get("text", "")
 
             for entry in entries:
+                if isinstance(entry, str):
+                    motd += entry
+                    continue
+
                 motd += entry.get("text", "")
             motd += end
 
@@ -119,7 +123,7 @@ class SLPResponse(StatusResponse):
             motd = raw_motd
 
         motd = motd.replace("\n", " ").strip()
-        motd = cls._remove_color_codes(cstr=motd)
+        motd = cls._remove_color_codes(motd)
         return motd
 
     @staticmethod
