@@ -10,8 +10,7 @@ classifiers = ["Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["dnspython>=2.2.1",
-]
+dependencies = ["dnspython>=2.2.1"]
 description = "A lightweight Minecraft client for querying the status data of a Minecraft server."
 name = "mcclient-lib"
 readme = "README.md"
