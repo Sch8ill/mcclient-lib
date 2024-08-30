@@ -18,7 +18,7 @@ requires-python = ">=3.7"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/sch8ill/mcclient-lib/issues"
-"Homepage" = "https://github.com/Sch8ill/mcclient-lib"
+"Homepage" = "https://github.com/sch8ill/mcclient-lib"
 
 [tool.pytest.ini_options]
 addopts = "--cov=mcclient --ignore=examples"
@@ -27,3 +27,6 @@ minversion = "6.0"
 [tool.mypy]
 check_untyped_defs = true
 exclude = ["tests"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
